@@ -1,22 +1,23 @@
-package springboottemplate.auth;
-
+package springboottemplate.data_services.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class RegisterRequest {
+@AllArgsConstructor
+public class UserDTO {
+
+    private Integer userId;
 
     private String firstName;
-    private String lastName;
-    private String email;
-    private String password;
 
+    private String lastName;
+
+    private String email;
+
+    private byte[] profileImage;
 }

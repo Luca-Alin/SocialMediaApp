@@ -1,7 +1,7 @@
 package springboottemplate.config;
 
 import lombok.RequiredArgsConstructor;
-import springboottemplate.data.user.UserRepository;
+import springboottemplate.data_services.user.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

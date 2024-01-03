@@ -15,12 +15,13 @@ import java.io.IOException;
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class AuthController {
-    private final AuthenticationService service;
+    private final AuthenticationService authenticationService;
+
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(
             @RequestBody RegisterRequest registerRequest
     ) {
-        var authenticationResponse = service.register(registerRequest);
+        var authenticationResponse = authenticationService.register(registerRequest);
         return ResponseEntity.ok(authenticationResponse);
     }
 
@@ -28,7 +29,7 @@ public class AuthController {
     public ResponseEntity<AuthenticationResponse> authenticate(
             @RequestBody AuthenticationRequest authenticationRequest
     ) {
-        var authenticationResponse = service.authenticate(authenticationRequest);
+        var authenticationResponse = authenticationService.authenticate(authenticationRequest);
         return ResponseEntity.ok(authenticationResponse);
     }
 
@@ -37,7 +38,6 @@ public class AuthController {
             HttpServletRequest request,
             HttpServletResponse response
     ) throws IOException {
-        service.refreshToken(request, response);
+        authenticationService.refreshToken(request, response);
     }
-
 }
