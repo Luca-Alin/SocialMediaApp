@@ -1,0 +1,12 @@
+{
+  "resources": {
+    "includes": [
+      {
+        "pattern": "static/images/picsum.photos-images.txt"
+      },
+      {
+        "pattern": "static/images/placeholder.txt"
+      }
+    ]
+  }
+}
