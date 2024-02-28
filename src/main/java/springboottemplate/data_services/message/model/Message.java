@@ -28,10 +28,10 @@ public class Message {
     /*
     JSON for testing with postman
     {
-        id: null,
-        sendId: "senderId",
-        receiverId: "receiverId",
-        content: "string"
+        "id": null,
+        "senderId": "uuid",
+        "receiverId": "uuid",
+        "content": "This is a fabulous text message"
     }
     */
 }

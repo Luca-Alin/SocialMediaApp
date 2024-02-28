@@ -1,7 +1,9 @@
-package springboottemplate.data_services.chat;
+package springboottemplate.data_services.chat.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.lang.NonNullApi;
+import org.springframework.lang.Nullable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -11,6 +13,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import org.springframework.web.util.UriComponentsBuilder;
 import springboottemplate.data_services.chat.model.SocketUserCombo;
 import springboottemplate.data_services.message.model.Message;
+import springboottemplate.data_services.message.repository.MessageRepository;
 import springboottemplate.data_services.user.repository.UserRepository;
 
 import java.net.URI;
@@ -22,9 +25,10 @@ import java.util.Set;
 @Component
 public class ChatWebSocketHandler extends TextWebSocketHandler {
 
+    private final UserRepository userRepository;
+    private final MessageRepository messageRepository;
     private final Set<SocketUserCombo> sockets = new HashSet<>();
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private final UserRepository userRepository;
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -50,17 +54,18 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     protected void handleTextMessage(WebSocketSession session, TextMessage textMessage) throws Exception {
         try {
             Message message = objectMapper.readValue(textMessage.getPayload(), Message.class);
+            Message savedMessage = messageRepository.save(message);
+            String savedMessageString  = objectMapper.writeValueAsString(savedMessage);
 
             //send message back to the user
-            session.sendMessage(textMessage);
-
+            session.sendMessage(new TextMessage(savedMessageString));
             //send message to the receiver
             sockets.stream()
-                    .filter(suc -> suc.getUserId().equals(message.getReceiverId()))
+                    .filter(suc -> suc.getUserId().equals(savedMessage.getReceiverId()))
                     .findFirst()
                     .orElseThrow()
                     .getSocket()
-                    .sendMessage(textMessage);
+                    .sendMessage(new TextMessage(savedMessageString));
 
         } catch (Exception e) {
             session.sendMessage(new TextMessage(e.getMessage()));
@@ -80,12 +85,5 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     private String extractUsername(URI uri) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUri(uri);
         return builder.build().getQueryParams().getFirst("userid");
-    }
-
-    @Scheduled(fixedRate = 5000)
-    public void displayConnectedUsers() {
-        System.out.println("Displaying connected users");
-        sockets.forEach(suc -> System.out.println(suc.getSocket() + " " + suc.getUserId()));
-        System.out.println();
     }
 }

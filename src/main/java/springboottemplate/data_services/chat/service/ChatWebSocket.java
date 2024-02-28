@@ -1,4 +1,4 @@
-package springboottemplate.data_services.chat;
+package springboottemplate.data_services.chat.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
