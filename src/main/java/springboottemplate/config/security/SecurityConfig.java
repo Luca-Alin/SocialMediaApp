@@ -23,7 +23,8 @@ public class SecurityConfig {
     public String springProfile = "development";
     private final String[] AUTH_WHITELIST = {
             "/api/v1/auth/**",
-            "/api/v1/*/public/**"
+            "/api/v1/*/public/**",
+            "/chat"
     };
 
     @Bean
