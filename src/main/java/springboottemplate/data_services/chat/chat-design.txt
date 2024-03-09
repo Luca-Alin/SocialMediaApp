@@ -1,7 +1,0 @@
-This directory contains all the files related to the configuration of the chat web socket
-
-The design of the chat will be the following:
-
-1. Controller - this class will a method for fetching the conversations of two users
-2. The ChatWebSocket will receive a message in the format { message, user1, user2}, and upon successful
-saving of the message to the database, this message will be redirected to both user1 and user2
