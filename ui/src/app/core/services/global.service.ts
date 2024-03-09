@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import {UserDTO} from "../http/user-service/model/UserDTO";
-import {environment} from "../../../environment/environment.prod";
 
 @Injectable({
   providedIn: 'root'
