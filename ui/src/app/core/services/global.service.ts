@@ -6,8 +6,8 @@ import {environment} from "../../../environment/environment.prod";
   providedIn: 'root'
 })
 export class GlobalService {
-  // baseURL: string = "http://localhost:8080/api/v1";
-  baseUrl: string = environment.baseApiUrl;
+  baseUrl: string = "http://localhost:8080/api/v1";
+  // baseUrl: string = environment.baseApiUrl;
   user: UserDTO | null = null;
   constructor() {
     console.log(this.baseUrl);

@@ -1,1 +1,1 @@
-Add the "seed" argument to generate random data
+<h1>Social Media App</h1>
