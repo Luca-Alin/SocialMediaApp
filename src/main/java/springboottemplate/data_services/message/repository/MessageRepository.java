@@ -13,7 +13,7 @@ public interface MessageRepository extends JpaRepository<Message, Integer> {
     @Query("""
         select m
         from Message m
-        where m.sender = ?1 or m.receiver = ?2
+        where m.sender = ?1 or m.receiver = ?1
     """)
     List<Message> findMessagesSendOrReceivedByUser(User user);
 }
