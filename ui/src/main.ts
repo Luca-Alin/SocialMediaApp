@@ -1,10 +1,14 @@
-/// <reference types="@angular/localize" />
+import './assets/main.css'
 
-import { bootstrapApplication } from '@angular/platform-browser';
-import { appConfig } from './app/app.config';
-import { AppComponent } from './app/app.component';
-import {enableProdMode} from "@angular/core";
+import { createApp } from 'vue'
+import { createPinia } from 'pinia'
 
-bootstrapApplication(AppComponent, appConfig)
-  .catch((err) => console.error(err));
+import App from './App.vue'
+import router from './router'
 
+const app = createApp(App)
+
+app.use(createPinia())
+app.use(router)
+
+app.mount('#app')
