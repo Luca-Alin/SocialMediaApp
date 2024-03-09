@@ -39,8 +39,7 @@ build/
 /bazel-out
 
 # Node
-/node_modules
-/*/node_modules
+ui/node_modules
 npm-debug.log
 yarn-error.log
 
@@ -62,14 +61,15 @@ yarn-error.log
 .history/*
 
 # Miscellaneous
-/.angular/cache
-.sass-cache/
-/connect.lock
-/coverage
-/libpeerconnection.log
+ui/.angular/cache
+ui/.sass-cache/
+ui/connect.lock
+ui/coverage
+ui/libpeerconnection.log
 testem.log
-/typings
+ui/typings
 
 # System files
 .DS_Store
 Thumbs.db
+
