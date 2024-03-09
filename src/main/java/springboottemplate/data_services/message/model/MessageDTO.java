@@ -1,34 +1,22 @@
 package springboottemplate.data_services.message.model;
 
-
-import jakarta.persistence.*;
+import jakarta.persistence.ManyToOne;
 import lombok.*;
 import springboottemplate.data_services.user.model.User;
+import springboottemplate.data_services.user.model.UserDTO;
 
 import java.time.LocalDateTime;
 
+@Builder
 @Getter
 @Setter
-@ToString
-@Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+public class MessageDTO {
 
-@Entity
-@Table(name = "messages")
-public class Message {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    @ManyToOne
-    private User sender;
-
-    @ManyToOne
-    private User receiver;
-
+    private String senderId;
+    private String receiverId;
     private String content;
-
     private LocalDateTime dateSent;
 }
