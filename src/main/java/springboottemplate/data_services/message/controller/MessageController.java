@@ -24,7 +24,7 @@ public class MessageController {
 
     private final MessageService messageService;
 
-    @GetMapping
+    @GetMapping("/")
     public ResponseEntity<Object> findAllConversations(@AuthenticationPrincipal UserDetails userDetails) {
         try {
             List<Conversation> conversations = messageService.findAllConversationsOfUserDetails(userDetails);
