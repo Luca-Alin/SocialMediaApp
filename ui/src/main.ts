@@ -10,13 +10,14 @@ import axios from "axios";
 
 
 axios.defaults.baseURL = import.meta.env.VITE_API_URL;
-export const axiosInstance = axios.create();
-axiosInstance.interceptors.request.use(
+axios.interceptors.request.use(
     (config) => {
-        if (config.url?.indexOf("/public"))
+        console.log("axios request");
+
+        if (config.url?.indexOf("/public") != -1 || config.url?.indexOf("/auth") != -1)
             return config;
 
-        const accessToken = localStorage.getItem("accessToken");
+        const accessToken = sessionStorage.getItem("accessToken");
         if (!accessToken) {
             router.push("").finally();
         }
@@ -29,8 +30,9 @@ axiosInstance.interceptors.request.use(
     }
 );
 
-axiosInstance.interceptors.response.use(
+axios.interceptors.response.use(
     (response) => {
+        console.log("axios response");
         return response;
     },
     (error) => {
