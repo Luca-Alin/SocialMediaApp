@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 import springboottemplate.auth.models.AuthenticationResponse;
 import springboottemplate.auth.models.LoginRequest;
@@ -48,11 +49,13 @@ public class AuthController {
         try {
             var authenticationResponse = authenticationService.login(loginRequest);
             return new ResponseEntity<>(authenticationResponse, HttpStatus.OK);
+        } catch (BadCredentialsException e) {
+            return new ResponseEntity<>("Your credentials are wrong", HttpStatus.UNAUTHORIZED);
         } catch (Exception e) {
             log.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-
-        }}
+        }
+    }
 
     @PostMapping("/refresh-token")
     public void refreshToken(
