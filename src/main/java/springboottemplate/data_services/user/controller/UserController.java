@@ -72,13 +72,13 @@ public class UserController {
         }
     }
 
-    @PostMapping("/")
-    public ResponseEntity<Object> updateUser(@AuthenticationPrincipal UserDetails userDetails) {
-        throw new RuntimeException();
+    @PutMapping("/")
+    public ResponseEntity<UserDTO> patchUser(@AuthenticationPrincipal UserDetails userDetails, @RequestBody UserDTO userDTO) {
+        return ResponseEntity.ok(userService.patchUser(userDetails, userDTO));
     }
 
     @DeleteMapping("/{uuid}")
-    public ResponseEntity deleteUser(@AuthenticationPrincipal UserDetails userDetails, @PathVariable String uuid) {
+    public ResponseEntity<?> deleteUser(@AuthenticationPrincipal UserDetails userDetails, @PathVariable String uuid) {
         try {
             userService.deleteUser(userDetails, uuid);
             return new ResponseEntity<>(HttpStatus.OK);

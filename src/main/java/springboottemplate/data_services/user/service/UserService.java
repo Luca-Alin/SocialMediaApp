@@ -101,12 +101,36 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException(userDetails.getUsername()));
     }
 
+    public UserDTO patchUser(UserDetails userDetails, UserDTO userDTO) {
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow();
+
+        String email = userDTO.getEmail();
+        String firstName = userDTO.getFirstName();
+        String lastName = userDTO.getLastName();
+        String bio = userDTO.getBio();
+        byte[] profileImage = userDTO.getProfileImage();
+
+        if (email != null) user.setEmail(email);
+        if (firstName != null) user.setFirstName(firstName);
+        if (lastName != null) user.setLastName(lastName);
+        if (bio != null) user.getUserProfile().setBio(bio);
+        if (profileImage != null) user.getUserProfile().setProfileImage(profileImage);
+
+        User patchedUser = userRepository.save(user);
+
+        return userDTOMapper.apply(patchedUser);
+    }
+
+
     public UserDTO findUserByUserDetails(UserDetails userDetails) throws UserNotFoundException {
         User user = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new UserNotFoundException(userDetails.getUsername()));
 
         return userDTOMapper.apply(user);
     }
+
+
 
     //    public List<UserDTO> getReceivedFriendshipRequests(UserDetails userDetails) throws UserNotFoundException {
 //        User user = getUser(userDetails);
