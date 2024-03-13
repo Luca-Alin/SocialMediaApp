@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 @Service
 public class MessageService {
 
-    private MessageRepository messageRepository;
+    private final MessageRepository messageRepository;
     private final MessageDTOMapper messageDTOMapper;
     private final UserRepository userRepository;
     private final UserDTOMapper userDTOMapper;
@@ -54,12 +54,12 @@ public class MessageService {
                                 : friendship.getSender()
                 )
                 .forEach((friend) -> map.putIfAbsent(friend, new ArrayList<>()));
-
-        return map.values()
+        
+        return map.entrySet()
                 .stream()
-                .map((messages) -> {
-                    UserDTO userDTO = userDTOMapper.apply(user);
-                    List<MessageDTO> messageDTOs = messages
+                .map((entry) -> {
+                    UserDTO userDTO = userDTOMapper.apply(entry.getKey());
+                    List<MessageDTO> messageDTOs = entry.getValue()
                             .stream()
                             .map(messageDTOMapper)
                             .toList();
