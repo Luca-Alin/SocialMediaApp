@@ -10,6 +10,12 @@
   ],
   "include": [
     "**/*",
-    "**/*.ts",
-  ]
+    "**/*.ts"
+  ],
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noImplicitThis": true
+  }
 }
