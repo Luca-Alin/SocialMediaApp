@@ -1,9 +1,54 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import {createRouter, createWebHistory} from "vue-router";
+import HomeView from "@/views/HomeView.vue";
+import NotFoundView from "@/views/NotFoundView.vue";
+import LoginView from "@/views/LoginView.vue";
+import RegisterView from "@/views/RegisterView.vue";
+import PostsView from "@/views/PostsView.vue";
+import SettingsView from "@/views/SettingsView.vue";
+import UserDetailsView from "@/views/UserDetailsView.vue";
+import {useUserInfoStore} from "@/stores/UserInfoStore";
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
-  ]
-})
+    history: createWebHistory(import.meta.env.BASE_URL),
+    routes: [
+        {
+            path: "/login",
+            component: LoginView
+        },
+        {
+            path: "/register",
+            component: RegisterView
+        },
+        {
+            path: "/posts",
+            component: PostsView
+        },
+        {
+            path: "/settings",
+            component: SettingsView
+        },
+        {
+            path: "/user/:id",
+            name: "User",
+            component: UserDetailsView
+        },
+        {
+            path: "/",
+            redirect(to) {
+                router.push("/posts")
+                    .then();
+          },
+        },
+        {
+            path: "/:pathMatch(.*)*",
+            name: "NotFound",
+            component: NotFoundView
+        }
+    ]
+});
 
-export default router
+router.beforeEach((to) => {
+    const store = useUserInfoStore();
+});
+
+export default router;
