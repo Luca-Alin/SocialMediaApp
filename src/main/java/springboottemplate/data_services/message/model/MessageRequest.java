@@ -10,6 +10,6 @@ import springboottemplate.data_services.user.model.User;
 @NoArgsConstructor
 public class MessageRequest {
 
-    private String content;
-    private String receiverId;
+        private String content;
+        private String receiverId;
 }
