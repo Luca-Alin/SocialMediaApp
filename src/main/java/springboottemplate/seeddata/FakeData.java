@@ -10,6 +10,8 @@ import springboottemplate.data_services.comment.repository.CommentRepository;
 import springboottemplate.data_services.friendship.model.Friendship;
 import springboottemplate.data_services.friendship.model.FriendshipStatus;
 import springboottemplate.data_services.friendship.repository.FriendshipRepository;
+import springboottemplate.data_services.message.model.Message;
+import springboottemplate.data_services.message.repository.MessageRepository;
 import springboottemplate.data_services.post.model.Post;
 import springboottemplate.data_services.post.model.PostImage;
 import springboottemplate.data_services.post.repository.PostRepository;
@@ -22,6 +24,8 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
+
 
 @RequiredArgsConstructor
 
@@ -33,7 +37,7 @@ public class FakeData {
     private final Random random = new Random();
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
-
+    private final MessageRepository messageRepository;
     private final List<String> imagesStrings = new ArrayList<>();
     private final List<String> textStrings = new ArrayList<>();
     private final List<String> fakeNames = new ArrayList<>();
@@ -48,18 +52,26 @@ public class FakeData {
 
 
             List<User> users = generateUsers();
+            System.out.println("Time to generate users data into database: " + (System.currentTimeMillis() - timer) / 1000.0);
 
-            Thread t1 = new Thread(() -> generateFriendships(users));
-            t1.start();
+            System.out.println("Generating users: " + (System.currentTimeMillis() - timer) / 1000.0);
+            generateFriendships(users);
 
+            System.out.println("Generating posts: " + (System.currentTimeMillis() - timer) / 1000.0);
             List<Post> posts = generatePosts(users);
+
+            System.out.println("Inserting comments: " + (System.currentTimeMillis() - timer) / 1000.0);
             generateComments(posts, users);
+
+            System.out.println("Inserting messages: " + (System.currentTimeMillis() - timer) / 1000.0);
+            generateMessages();
+
             System.out.println("Time to insert fake data into database: " + (System.currentTimeMillis() - timer) / 1000.0);
         };
     }
 
     @SuppressWarnings("DataFlowIssue")
-    public void readFakeData() throws Exception {
+    public void readFakeData() {
         imagesStrings.addAll(List.of(Images.images.split("\n")));
         fakeNames.addAll(List.of(Names.names.split("\n")));
         textStrings.addAll(List.of(Text.text.split("\n")));
@@ -158,8 +170,6 @@ public class FakeData {
                 content.append(randomText());
             }
 
-
-
             Comment comment = Comment
                     .builder()
                     .user(user)
@@ -172,6 +182,23 @@ public class FakeData {
         commentRepository.saveAll(comments);
     }
 
+    public void generateMessages() {
+        AtomicInteger idx = new AtomicInteger();
+
+        List<Friendship> friendships = friendshipRepository.findAll();
+        friendships
+                .forEach(friendship -> {
+                    for (int i = 0; i < random.nextInt(20); i++) {
+                        Message m = Message
+                                .builder()
+                                .content("Message %d".formatted(idx.incrementAndGet()))
+                                .sender(friendship.getSender())
+                                .receiver(friendship.getReceiver())
+                                .build();
+                        Message savedMessage = messageRepository.save(m);
+                    }
+                });
+    }
 
     public byte[] randomImage() {
         return Base64.getDecoder().decode(
