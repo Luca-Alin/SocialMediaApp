@@ -4,12 +4,16 @@ import {UserDTO} from "./model/UserDTO";
 class UserService {
     url = "/users";
 
-    public getUserById(id : string) {
-        return axios.get<UserDTO>(`${this.url}/${id}`);
+    public findUserById(id : string) {
+        return axios.get<UserDTO>(`${this.url}/public/${id}`);
     }
 
     public findUserDetails() {
         return axios.get<UserDTO>(`${this.url}/user-by-jwt`);
+    }
+
+    public patchUser(userDTO: UserDTO) {
+        return axios.put<UserDTO>(`${this.url}/`, userDTO);
     }
 }
 
