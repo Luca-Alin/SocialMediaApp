@@ -12,15 +12,16 @@ const {user, accessToken, refreshToken} = storeToRefs(userInfo);
 const posts = ref([]);
 
 // TODO - reduce the boilerplatness of this code
-watch(accessToken, (oldVal, newVal) => {
-  if (accessToken.value == null)
-    router.push("/login");
-})
 onMounted(() => {
   if (accessToken.value == null) {
-    router.push("/login");
+    router.push("login");
     return;
   }
+
+  watch(accessToken, (oldVal, newVal) => {
+    if (accessToken.value == null)
+      router.push("login");
+  })
 
   postService.findAllByUserAndFriends()
       .then((res) => {
@@ -37,7 +38,7 @@ onMounted(() => {
 <template>
   <h1>Posts</h1>
 
-  <div v-for="post in posts">
+  <div v-for="post in posts" class="d-flex flex-row">
     <PostComponent :propPost="post"/>
   </div>
 </template>
