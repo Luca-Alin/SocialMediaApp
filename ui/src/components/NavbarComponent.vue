@@ -1,46 +1,49 @@
 <script setup lang="ts">
-import {createPinia, storeToRefs} from "pinia";
-import {createApp, onMounted} from "vue";
 
 import App from "../App.vue";
+import {createPinia, storeToRefs} from "pinia";
 import {useUserInfoStore} from "../stores/UserInfoStore";
-import chatService from "../services/chat-service/ChatService";
 import {useDeveloperStore} from "../stores/DeveloperStore";
+
+import {createApp} from "vue";
+import chatService from "../services/chat-service/ChatService";
 
 const pinia = createPinia();
 const app = createApp(App);
 app.use(pinia);
-const userInfo = useUserInfoStore();
 
-const {user} = storeToRefs(userInfo);
+
+const userInfoStore = useUserInfoStore();
+const {user} = storeToRefs(userInfoStore);
+
+const developerStore = useDeveloperStore();
+const {developerMode} = storeToRefs(developerStore);
 
 function logout() {
-  userInfo.logoutUser();
+  userInfoStore.logoutUser();
   chatService.disconnect();
-}
 
-const developer = useDeveloperStore();
-const {developerMode} = storeToRefs(developer);
+}
 
 function enableDeveloperMode() {
-  developer.setDeveloperMode();
+  developerStore.setDeveloperMode();
 }
 
-onMounted(() => {
 
-});
 </script>
 
 <template>
-  <!-- Navbar if user is connected -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">Social Media App</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
               aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
+
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
           <li v-if="user" class="nav-item">
@@ -48,9 +51,10 @@ onMounted(() => {
           </li>
 
           <li v-if="user" class="nav-item dropdown">
+            <!--suppress TypeScriptUnresolvedReference -->
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
                aria-expanded="false">
-              {{ user?.firstName }} {{ user?.lastName }}
+              {{ user!.firstName }} {{ user!.lastName }}
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
               <li>
@@ -75,15 +79,17 @@ onMounted(() => {
           </li>
 
         </ul>
-        <form class="d-flex">
+
+        <div class="d-flex">
           <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success" type="submit">Search</button>
-        </form>
+          <button class="btn btn-outline-light" type="submit">Search</button>
+        </div>
+
       </div>
+
     </div>
   </nav>
 
-  <!-- Navbar if user is not connected -->
 </template>
 
 <style scoped>
