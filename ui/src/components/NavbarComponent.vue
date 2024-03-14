@@ -5,8 +5,9 @@ import {createPinia, storeToRefs} from "pinia";
 import {useUserInfoStore} from "../stores/UserInfoStore";
 import {useDeveloperStore} from "../stores/DeveloperStore";
 
-import {createApp} from "vue";
+import {createApp, onMounted, type Ref, ref, watch} from "vue";
 import chatService from "../services/chat-service/ChatService";
+import developerService from "../services/developer-mode-service/DeveloperService";
 
 const pinia = createPinia();
 const app = createApp(App);
@@ -14,7 +15,7 @@ app.use(pinia);
 
 
 const userInfoStore = useUserInfoStore();
-const {user} = storeToRefs(userInfoStore);
+const {user, accessToken, refreshToken} = storeToRefs(userInfoStore);
 
 const developerStore = useDeveloperStore();
 const {developerMode} = storeToRefs(developerStore);
@@ -29,7 +30,35 @@ function enableDeveloperMode() {
   developerStore.setDeveloperMode();
 }
 
+const accessTokenExpTime: Ref<any> = ref(null);
+const refreshTokenExpTime: Ref<any> = ref(null);
 
+onMounted(() => {
+  let timer = null;
+  if (developerMode.value) {
+    timer = setInterval(() => {
+      accessTokenExpTime.value = developerService.getTokenExpirationTime(accessToken.value);
+      refreshTokenExpTime.value = developerService.getTokenExpirationTime(refreshToken.value);
+    }, 1000);
+  } else {
+    accessTokenExpTime.value = null;
+    refreshTokenExpTime.value = null;
+    timer = null;
+  }
+});
+watch((developerMode), () => {
+  let timer = null;
+  if (developerMode.value) {
+    timer = setInterval(() => {
+      accessTokenExpTime.value = developerService.getTokenExpirationTime(accessToken.value);
+      refreshTokenExpTime.value = developerService.getTokenExpirationTime(refreshToken.value);
+    }, 1000);
+  } else {
+    accessTokenExpTime.value = null;
+    refreshTokenExpTime.value = null;
+    timer = null;
+  }
+});
 </script>
 
 <template>
@@ -52,7 +81,7 @@ function enableDeveloperMode() {
 
           <li v-if="user" class="nav-item dropdown">
             <!--suppress TypeScriptUnresolvedReference -->
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+            <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
                aria-expanded="false">
               {{ user!.firstName }} {{ user!.lastName }}
             </a>
@@ -77,6 +106,18 @@ function enableDeveloperMode() {
               </span>
             </button>
           </li>
+
+          <li v-if="developerMode" class="nav-item">
+            <div class="nav-link active d-flex flex-column" aria-current="page">
+              <span>
+                {{ `Access Token: ${accessTokenExpTime}` }}
+              </span>
+              <span>
+                {{ `Refresh Token: ${refreshTokenExpTime}` }}
+              </span>
+            </div>
+          </li>
+
 
         </ul>
 
