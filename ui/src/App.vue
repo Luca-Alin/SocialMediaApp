@@ -9,27 +9,44 @@ const {user} = storeToRefs(userStore);
 </script>
 
 <template>
-  <div class="container d-flex flex-column">
+  <div id="main" class="d-flex flex-column vh-100 min-vh-100">
 
-    <div>
+    <header>
       <NavbarComponent/>
-    </div>
+    </header>
 
-    <div>
+    <main class="overflow-y-scroll">
+
       <div class="d-flex flex-row">
-        <div class="container">
-          <RouterView/>
+        <div class="container d-flex justify-content-center">
+          <div>
+            <RouterView/>
+          </div>
         </div>
 
         <div v-if="user" class="container" style="max-height: 500px">
-          <ChatComponent style="max-height: 500px; max-width: 300px; position: absolute; right: 0; bottom: 0"/>
+          <ChatComponent style="max-height: 500px; max-width: 300px; position: absolute; right: 3em; bottom: 0"/>
         </div>
       </div>
-    </div>
+    </main>
 
 
   </div>
 </template>
 
 <style scoped>
+main::-webkit-scrollbar {
+  width: 0.4em;
+}
+
+main::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+main::-webkit-scrollbar-thumb {
+  padding-right: 5px;
+  background-color: lightgray;
+  outline: 1px solid slategrey;
+  border-radius: 20px;
+}
 </style>
