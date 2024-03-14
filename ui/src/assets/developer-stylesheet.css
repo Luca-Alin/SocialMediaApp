@@ -1,4 +1,4 @@
-body::before {
+body::after {
     content: "XS";
     color: red;
     font-size: 2rem;
@@ -9,31 +9,31 @@ body::before {
 }
 
 @media (min-width: 576px) {
-    body::before {
+    body::after {
         content: "SM";
     }
 }
 
 @media (min-width: 768px) {
-    body::before {
+    body::after {
         content: "MD";
     }
 }
 
 @media (min-width: 992px) {
-    body::before {
+    body::after {
         content: "LG";
     }
 }
 
 @media (min-width: 1200px) {
-    body::before {
+    body::after {
         content: "XL";
     }
 }
 
 @media (min-width: 1400px) {
-    body::before {
+    body::after {
         content: "XXL";
     }
 }
