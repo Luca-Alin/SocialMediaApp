@@ -33,10 +33,7 @@ const router = createRouter({
         },
         {
             path: "/",
-            redirect(to) {
-                router.push("/posts")
-                    .then();
-          },
+            redirect: "/posts"
         },
         {
             path: "/:pathMatch(.*)*",
