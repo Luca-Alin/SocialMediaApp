@@ -8,39 +8,7 @@ import App from "./App.vue";
 import router from "./router";
 
 import axios from "axios";
-
-
-
-axios.defaults.baseURL = import.meta.env.VITE_API_URL;
-axios.interceptors.request.use(
-    (config) => {
-        console.log("axios request");
-
-        if (config.url?.indexOf("/public") != -1 || config.url?.indexOf("/auth") != -1)
-            return config;
-
-        const accessToken = sessionStorage.getItem("accessToken");
-        if (!accessToken) {
-            router.push("").finally();
-        }
-
-        config.headers["Authorization"] = `Bearer ${accessToken}`;
-        return config;
-    },
-    (error) => {
-        return Promise.reject(error);
-    }
-);
-
-axios.interceptors.response.use(
-    (response) => {
-        console.log("axios response");
-        return response;
-    },
-    (error) => {
-        return Promise.reject(error);
-    }
-);
+import {useUserInfoStore} from "../src/stores/UserInfoStore";
 
 
 const app = createApp(App);
@@ -50,4 +18,26 @@ app.use(router);
 
 app.mount("#app");
 
+axios.defaults.baseURL = import.meta.env.VITE_API_URL;
+axios.interceptors.request.use(
+    (config) => {
+        const userInfoStore = useUserInfoStore();
 
+        if (config.url?.indexOf("/public") != -1 || config.url?.indexOf("/auth") != -1)
+            return config;
+
+        const accessToken = userInfoStore.accessToken;
+        if (!accessToken) {
+            router.push("/login").finally();
+        }
+
+        config.headers["Authorization"] = `Bearer ${accessToken}`;
+        return config;
+    },
+    (error) => Promise.reject(error)
+);
+
+axios.interceptors.response.use(
+    (response) => response,
+    (error) => Promise.reject(error)
+);
