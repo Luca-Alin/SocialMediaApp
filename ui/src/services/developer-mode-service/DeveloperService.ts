@@ -19,6 +19,15 @@ class DeveloperService {
             }
         }
     }
+
+    getTokenExpirationTime(token: string | null): number | null {
+        if (token == null)
+            return null;
+        const tokenPayload = atob(token.split(".")[1]);
+        const decodedPayload = JSON.parse(tokenPayload);
+        const currentTime = Math.floor(Date.now() / 1000);
+        return decodedPayload.exp - currentTime;
+    }
 }
 
 const developerService = new DeveloperService();
