@@ -1,7 +1,7 @@
 import {defineStore} from "pinia";
 import type {UserDTO} from "@/services/user-service/model/UserDTO";
 
-export const _ACCESS_TOKEN = "remember_me";
+export const _ACCESS_TOKEN = "access_token";
 export const _REFRESH_TOKEN = "refresh_token";
 export const _USER_INFO = "user_info";
 export const _REMEMBER_ME = "remember_me";
