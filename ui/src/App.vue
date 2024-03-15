@@ -3,32 +3,27 @@ import ChatComponent from "./components/ChatComponent.vue";
 import NavbarComponent from "./components/NavbarComponent.vue";
 import {useUserInfoStore} from "./stores/UserInfoStore";
 import {storeToRefs} from "pinia";
-import {type Ref, ref} from "vue";
+import {ref, type Ref} from "vue";
 
 const userStore = useUserInfoStore();
 const {user} = storeToRefs(userStore);
 
-const chatWindowIsOpen: Ref<boolean> = ref(true);
-
-const childMsg = ref('No child msg yet')
+const chatWindowIsOpen: Ref<boolean> = ref(false);
 </script>
 
 <template>
-  <div>
-    {{ chatWindowIsOpen }}
-  </div>
-  <div id="main" class="d-flex flex-column vh-100 min-vh-100">
+  <div id="page-content" class="d-flex flex-column">
 
     <header>
       <NavbarComponent/>
     </header>
 
-    <main class="d-flex flex-row flex-fill justify-content-center">
+    <main class="d-flex flex-row flex-fill justify-content-center overflow-hidden">
 
       <!-- Content - posts, settings, user profiles etc. -->
       <div :class="(chatWindowIsOpen) ?
-                    'd-none d-sm-none d-md-flex'
-                    : 'd-flex'">
+                    'd-none d-sm-none d-md-flex' :
+                    'd-flex'">
         <div style="max-width: 768px">
           <RouterView/>
         </div>
@@ -36,7 +31,7 @@ const childMsg = ref('No child msg yet')
 
 
       <!-- Chat Window Button  -->
-      <div v-if="!chatWindowIsOpen" class="open-chat-button d-md-none" style="z-index: 9999;">
+      <div v-if="!chatWindowIsOpen" id="open-chat-button" class="d-md-none">
         <button
             type="button"
             class="btn btn-primary rounded-5 pt-2 pb-2"
@@ -53,17 +48,19 @@ const childMsg = ref('No child msg yet')
       <!-- Chat Window -->
       <div v-if="user"
            :class="(chatWindowIsOpen) ?
-             'd-flex d-sm-flex flex-fill'
-             : 'd-none d-sm-none d-md-flex'"
+             'd-flex d-sm-flex flex-grow-1' :
+             'd-none d-sm-none d-md-flex'"
+           class="overflow-hidden"
       >
-        <div
-            class="overflow-y-scroll d-flex flex-column flex-grow-1"
-        >
+
+        <div class="d-flex flex-column flex-grow-1 overflow-hidden">
           <ChatComponent
               @maximize-request="() => chatWindowIsOpen = !chatWindowIsOpen"
               :chat-is-maximised="chatWindowIsOpen"
-              class="flex-fill overflow-y-scroll"
-              style="max-height: 75vh"
+              id="actual-chat-component"
+              :class="(chatWindowIsOpen) ?
+                      'overflow-hidden h-100' :
+                      ''"
           />
         </div>
 
@@ -76,11 +73,30 @@ const childMsg = ref('No child msg yet')
 </template>
 
 <style scoped>
-.open-chat-button {
+#page-content {
+  height: 100vh;
+  min-height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  #actual-chat-component {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    max-height: 50vh;
+  }
+}
+
+#open-chat-button {
   position: fixed;
   right: 1.5em;
   bottom: 1.5em;
+  z-index: 9999;
 }
+
 
 main::-webkit-scrollbar {
   width: 0.4em;

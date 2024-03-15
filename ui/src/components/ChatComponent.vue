@@ -12,7 +12,6 @@ const userInfo = useUserInfoStore();
 const {user, accessToken, refreshToken} = storeToRefs(userInfo);
 
 
-
 const socketIsConnected = ref(chatService.webSocketIsConnected);
 
 const messageStore = useMessagesStore();
@@ -22,7 +21,7 @@ const selectedUser: Ref<UserDTO | null> = ref(null);
 
 const props = defineProps({
   chatIsMaximised: Boolean
-})
+});
 const emit = defineEmits(["maximize-request"]);
 
 // TODO - reduce the boilerplatness of this code
@@ -53,7 +52,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="border border-primary">
+  <div class="border border-primary bg-light overflow-hidden">
+
+    <!-- Chat Top Bar (that can also open and close the chat) -->
     <div class="d-flex justify-content-center align-content-center">
       <button
           class="btn btn-outline-primary w-100 h-100 rounded-0"
@@ -67,7 +68,9 @@ onMounted(() => {
       <p v-else>Chat is offline</p>
     </div>
 
-    <div v-if="chatIsMaximised">
+    <div v-if="chatIsMaximised"
+        class="overflow-hidden h-100 w-100"
+    >
 
       <!-- Chat Panel -->
       <div v-if="selectedUser">
@@ -92,17 +95,37 @@ onMounted(() => {
         </div>
       </div>
 
-      <!-- Conversations Panel -->
-      <div v-else v-for="conversation in conversations">
-        <button class="btn" @click="selectedUser = conversation.friend">
-          {{ conversation.friend.firstName }} {{ conversation.friend.lastName }}
-        </button>
+      <!-- All Conversations Panel -->
+      <div v-else
+           class="overflow-y-scroll h-100 w-100"
+      >
+        <div
+            v-for="conversation in conversations"
+        >
+          <button class="btn" @click="selectedUser = conversation.friend">
+            {{ conversation.friend.firstName }} {{ conversation.friend.lastName }}
+          </button>
+        </div>
       </div>
+
 
     </div>
   </div>
 </template>
 
 <style scoped>
+.custom-scrollbar::-webkit-scrollbar {
+  width: 0.4em;
+}
 
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  padding-right: 5px;
+  background-color: lightgray;
+  outline: 1px solid slategrey;
+  border-radius: 20px;
+}
 </style>
