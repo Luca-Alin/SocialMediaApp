@@ -18,13 +18,15 @@ const chatWindowIsOpen: Ref<boolean> = ref(false);
       <NavbarComponent/>
     </header>
 
-    <main class="d-flex flex-row flex-fill justify-content-center overflow-hidden">
+    <main class="d-flex flex-row flex-fill justify-content-center overflow-y-scroll">
 
       <!-- Content - posts, settings, user profiles etc. -->
       <div :class="(chatWindowIsOpen) ?
                     'd-none d-sm-none d-md-flex' :
                     'd-flex'">
-        <div style="max-width: 768px">
+        <div style="max-width: 768px;"
+          class="container-fluid"
+        >
           <RouterView/>
         </div>
       </div>
