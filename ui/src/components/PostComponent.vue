@@ -2,17 +2,25 @@
 import type {PostDTO} from "../services/post-service/model/PostDTO";
 import {onMounted, type Ref, ref} from "vue";
 import PostCommentSection from "../components/PostCommentSection.vue";
+import {usePostsStore} from "../stores/PostsStore";
+import {storeToRefs} from "pinia";
+
+const postsStore = usePostsStore();
+const {posts} = storeToRefs(postsStore);
 
 const props = defineProps({
-  propPost: Object
+  propPost: Object,
+  postId: String
 });
 
-const post: Ref<PostDTO | null> = ref(null);
-const uniqueId: Ref<string | null> = ref(null);
 
+const post: Ref<PostDTO | null> = ref(null);
+const bootstrapId: Ref<string | null> = ref(null);
 onMounted(() => {
-  post.value = props.propPost as PostDTO;
-  uniqueId.value = `UniqueId-${post.value?.uuid}`;
+  post.value = posts.value.get(props.postId!) as PostDTO;
+  bootstrapId.value = `bootstrapId-${post.value?.uuid}`;
+
+  console.log(post.value);
 });
 </script>
 
@@ -30,12 +38,13 @@ onMounted(() => {
     </div>
 
     <!-- Post Images Carousel -->
-    <div :id="uniqueId!" class="carousel carousel-dark slide">
+    <div :id="bootstrapId!" class="carousel carousel-dark slide">
       <div class="carousel-indicators">
-        <button type="button" :data-bs-target="`#${uniqueId}`" data-bs-slide-to="0" class="active" aria-current="true"
+        <button type="button" :data-bs-target="`#${bootstrapId}`" data-bs-slide-to="0" class="active"
+                aria-current="true"
                 aria-label="Slide 1"></button>
-        <button type="button" :data-bs-target="`#${uniqueId}`" data-bs-slide-to="1" aria-label="Slide 2"></button>
-        <button type="button" :data-bs-target="`#${uniqueId}`" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        <button type="button" :data-bs-target="`#${bootstrapId}`" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" :data-bs-target="`#${bootstrapId}`" data-bs-slide-to="2" aria-label="Slide 3"></button>
       </div>
       <div class="carousel-inner">
         <div class="carousel-item active" data-bs-interval="10000">
@@ -84,11 +93,11 @@ onMounted(() => {
           </div>
         </div>
       </div>
-      <button class="carousel-control-prev" type="button" :data-bs-target="`#${uniqueId}`" data-bs-slide="prev">
+      <button class="carousel-control-prev" type="button" :data-bs-target="`#${bootstrapId}`" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Previous</span>
       </button>
-      <button class="carousel-control-next" type="button" :data-bs-target="`#${uniqueId}`" data-bs-slide="next">
+      <button class="carousel-control-next" type="button" :data-bs-target="`#${bootstrapId}`" data-bs-slide="next">
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Next</span>
       </button>
@@ -99,7 +108,7 @@ onMounted(() => {
       {{ post?.content }}
     </div>
 
-    <PostCommentSection :prop-comments="post?.comments"/>
+    <PostCommentSection :post-id="props.postId!"/>
   </div>
 
 </template>

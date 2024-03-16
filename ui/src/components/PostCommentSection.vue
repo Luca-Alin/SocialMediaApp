@@ -1,15 +1,46 @@
 <script setup lang="ts">
 import {onMounted, ref, type Ref} from "vue";
 import type {CommentDTO} from "../services/comment-service/model/CommentDTO";
+import {c} from "vite/dist/node/types.d-AKzkD8vd";
+import {usePostsStore} from "../stores/PostsStore";
+import {storeToRefs} from "pinia";
+import type {PostDTO} from "../services/post-service/model/PostDTO";
+import commentService from "../services/comment-service/CommentService";
+
+const postsStore = usePostsStore();
+const {posts} = storeToRefs(postsStore);
+
 
 const props = defineProps({
-  propComments: Object
+  propComments: Object,
+  postId: String
 });
 
 const comments: Ref<CommentDTO[] | null> = ref(null);
+const post: Ref<PostDTO | null> = ref(null);
 onMounted(() => {
-  comments.value = props.propComments as CommentDTO[];
+  post.value = (posts.value.get(props.postId!) as PostDTO);
+  comments.value = post.value.comments;
 });
+
+const newComment = ref("");
+function addNewComment() {
+  commentService.addComment({
+    content: newComment.value,
+    user: null,
+    createdAt: null,
+    id: null
+  }, post.value!)
+      .then(res => {
+        post.value?.comments.push(res.data);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+      .finally(() => {
+      });
+  newComment.value = "";
+}
 </script>
 
 <template>
@@ -18,40 +49,18 @@ onMounted(() => {
       <h2 class="accordion-header">
         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                 data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-          Accordion Item #1
+          {{ comments?.length ?? 0 }} comments
         </button>
       </h2>
       <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-        <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code>
-          class. This is the first item's accordion body.
-        </div>
-      </div>
-    </div>
-    <div class="accordion-item">
-      <h2 class="accordion-header">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-          Accordion Item #2
-        </button>
-      </h2>
-      <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-        <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code>
-          class. This is the second item's accordion body. Let's imagine this being filled with some actual content.
-        </div>
-      </div>
-    </div>
-    <div class="accordion-item">
-      <h2 class="accordion-header">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
-          Accordion Item #3
-        </button>
-      </h2>
-      <div id="flush-collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-        <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code>
-          class. This is the third item's accordion body. Nothing more exciting happening here in terms of content, but
-          just filling up the space to make it look, at least at first glance, a bit more representative of how this
-          would look in a real-world application.
+        <div class="accordion-body">
+          <div class="d-flex">
+            <input type="text" v-model="newComment">
+            <button @click="addNewComment();">Submit Comment</button>
+          </div>
+          <div v-for="comment in comments">
+            {{comment.user.firstName}} {{ comment.user.lastName }}: {{ comment.content }}
+          </div>
         </div>
       </div>
     </div>

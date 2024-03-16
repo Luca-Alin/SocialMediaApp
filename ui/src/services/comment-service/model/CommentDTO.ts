@@ -1,8 +1,8 @@
 import {UserDTO} from "../../user-service/model/UserDTO";
 
 export interface CommentDTO {
-    id: number;
-    content: string;
-    user: UserDTO;
-    createdAt: Date; // Assuming LocalDateTime maps to Date in TypeScript
+    id: number | null;
+    content: string | null;
+    user: UserDTO | null;
+    createdAt: Date | null;
 }
