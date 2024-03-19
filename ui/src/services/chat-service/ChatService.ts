@@ -1,6 +1,8 @@
 import {useUserInfoStore} from "@/stores/UserInfoStore";
 import {Ref, ref} from "vue";
 import type {MessageRequest} from "@/services/chat-service/model/MessageRequest";
+import type {MessageDTO} from "src/services/chat-service/model/MessageDTO";
+import {useMessagesStore} from "/src/stores/MessagesStore";
 
 export class ChatService {
     wsUrl = import.meta.env.VITE_WS_URL;
@@ -10,7 +12,7 @@ export class ChatService {
     constructor() {
     }
 
-    public connect() {
+    public async connect() {
         if (this.ws != null) throw Error("WebSocket already connected").message;
 
 
@@ -20,7 +22,12 @@ export class ChatService {
 
         const connectionUrl = `${this.wsUrl}?username=${userInfo.accessToken}`;
         this.ws = new WebSocket(connectionUrl);
-        if (this.ws == null) throw new Error("WebSocket couldn't connect to the server").message;
+        if (this.ws == null) {
+            setTimeout(() => {
+                this.connect();
+            }, 1500);
+            throw new Error("WebSocket couldn't connect to the server").message;
+        }
 
 
         this.ws.onopen = this.onopen.bind(this);
@@ -28,6 +35,13 @@ export class ChatService {
         this.ws.onmessage = this.onmessage.bind(this);
     }
 
+    private onmessage(message: MessageEvent<MessageDTO>) {
+        const messageStore = useMessagesStore();
+        const messageDTO: MessageDTO = JSON.parse(message.data);
+        messageStore.addMessage(messageDTO);
+
+
+    }
     public disconnect() {
         this.ws?.close();
         this.ws = null;
@@ -51,8 +65,6 @@ export class ChatService {
         console.log("WebSocket disconnected", this.webSocketIsConnected);
     }
 
-    private onmessage(message: MessageEvent) {
-    }
 }
 
 const chatService = new ChatService();
