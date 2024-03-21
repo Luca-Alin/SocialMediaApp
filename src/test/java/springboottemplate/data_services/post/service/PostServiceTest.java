@@ -91,8 +91,6 @@ class PostServiceTest {
                 .thenReturn(Optional.of(mockUser));
         when(postRepository.save(mockPost))
                 .thenReturn(mockPost);
-        when(mockPost.getContent())
-                .thenReturn("abc");
         when(postDTOMapper.apply(mockPost))
                 .thenReturn(mockPostDTO);
 

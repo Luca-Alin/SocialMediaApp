@@ -6,15 +6,17 @@ import springboottemplate.data_services.comment.service.CommentDTOMapper;
 import springboottemplate.data_services.post.model.Post;
 import springboottemplate.data_services.post.model.PostImage;
 import springboottemplate.data_services.post.model.PostDTO;
+import springboottemplate.data_services.post.model.PostReaction;
 import springboottemplate.data_services.user.service.UserDTOMapper;
 
+import java.util.ArrayList;
 import java.util.function.Function;
 
 @RequiredArgsConstructor
 
 @Service
-public class PostDTOMapper implements Function<Post, PostDTO>
-{
+public class PostDTOMapper implements Function<Post, PostDTO> {
+    private final PostReactionDTOMapper postReactionDTOMapper;
     private final UserDTOMapper userDTOMapper;
     private final CommentDTOMapper commentDTOMapper;
     @Override
@@ -27,6 +29,14 @@ public class PostDTOMapper implements Function<Post, PostDTO>
                 .user((post.getUser() == null) ? null : userDTOMapper.apply(post.getUser()))
                 .images((post.getImages() == null) ? null : post.getImages().stream().map(PostImage::getImage).toList())
                 .comments((post.getComments() == null) ? null : post.getComments().stream().map(commentDTOMapper).toList())
+                .postReactions(
+                        (post.getPostReactions() == null) ?
+                                new ArrayList<>() :
+                                post.getPostReactions()
+                                        .stream()
+                                        .map(postReactionDTOMapper)
+                                        .toList()
+                        )
                 .build();
     }
 }

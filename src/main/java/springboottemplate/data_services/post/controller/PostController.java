@@ -13,8 +13,12 @@ import springboottemplate.data_services.exception.EntityShouldContainAnId;
 import springboottemplate.data_services.exception.UserDoesNotOwnEntityException;
 import springboottemplate.data_services.post.model.Post;
 import springboottemplate.data_services.post.model.PostDTO;
+import springboottemplate.data_services.post.model.PostReaction;
+import springboottemplate.data_services.post.model.PostReactionType;
 import springboottemplate.data_services.post.service.PostService;
 import springboottemplate.data_services.user.exceptions.UserNotFoundException;
+import springboottemplate.data_services.user.model.UserDTO;
+import springboottemplate.data_services.user.service.UserDTOMapper;
 
 import java.util.List;
 
@@ -66,8 +70,22 @@ public class PostController {
             PostDTO postDTO = postService.save(userDetails, post);
             return new ResponseEntity<>(postDTO, HttpStatus.CREATED);
         } catch (Exception e) {
-            log.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    record PostReactionDTO(String userId, PostReactionType postReactionType) {
+    }
+    @PostMapping("/reaction/{uuid}")
+    public ResponseEntity<?> addReaction(
+            @AuthenticationPrincipal UserDetails userDetails, @PathVariable String uuid, @RequestBody PostReactionType type
+    ) {
+        try {
+            List<PostReaction> postReaction = postService.addReaction(userDetails, uuid, type);
+            return ResponseEntity.ok(postReaction.stream().map((pr) -> new PostReactionDTO(pr.getUser().getUuid(), pr.getReaction())).toList());
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
         }
     }
 

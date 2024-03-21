@@ -16,4 +16,5 @@ public interface MessageRepository extends JpaRepository<Message, Integer> {
         where m.sender = ?1 or m.receiver = ?1
     """)
     List<Message> findMessagesSendOrReceivedByUser(User user);
+
 }

@@ -3,10 +3,12 @@ package springboottemplate.data_services.post.model;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
 import springboottemplate.data_services.comment.model.Comment;
 import springboottemplate.data_services.user.model.User;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static jakarta.persistence.FetchType.EAGER;
@@ -43,6 +45,9 @@ public class Post {
 
     @ElementCollection(fetch = EAGER)
     private List<PostImage> images;
+
+    @ElementCollection(fetch = EAGER)
+    private List<PostReaction> postReactions = new ArrayList<>();
 
     @PrePersist
     public void prePersist() {

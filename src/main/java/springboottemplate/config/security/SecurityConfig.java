@@ -1,5 +1,9 @@
 package springboottemplate.config.security;
 
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,7 +16,11 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.web.filter.OncePerRequestFilter;
 import springboottemplate.config.JwtAuthenticationFilter;
+
+import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity
@@ -34,8 +42,19 @@ public class SecurityConfig {
                         .permitAll()
                         .anyRequest()
                         .authenticated()
-
-                ).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).authenticationProvider(authenticationProvider).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class).exceptionHandling(configurer -> configurer.authenticationEntryPoint(authenticationEntryPoint()))
+                        .and()
+                        .addFilterBefore(new OncePerRequestFilter() {
+                            @Override
+                            protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+                                try {
+                                    Thread.sleep(400);
+                                } catch (InterruptedException ignored) {
+                                }
+                                filterChain.doFilter(request, response);
+                            }
+                        }, BasicAuthenticationFilter.class)
+                )
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).authenticationProvider(authenticationProvider).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class).exceptionHandling(configurer -> configurer.authenticationEntryPoint(authenticationEntryPoint()))
 //                .cors(AbstractHttpConfigurer::disable)
                 .build();
     }

@@ -14,12 +14,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class
-PostDTO {
+public class PostDTO {
     private String uuid;
     private String content;
     private LocalDateTime createdAt;
     private UserDTO user;
+
     private List<byte[]> images;
     private List<CommentDTO> comments;
+    private List<PostReactionDTO> postReactions;
 }

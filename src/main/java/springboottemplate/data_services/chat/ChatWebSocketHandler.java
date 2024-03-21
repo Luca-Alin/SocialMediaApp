@@ -1,6 +1,10 @@
 package springboottemplate.data_services.chat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -26,7 +30,11 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     private final MessageService messageService;
     private final Map<String, WebSocketSession> map = new HashMap<>();
     private final ChatService chatService;
-    private final ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper = JsonMapper.builder()
+            .addModule(new ParameterNamesModule())
+            .addModule(new Jdk8Module())
+            .addModule(new JavaTimeModule())
+            .build();
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -45,21 +53,19 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         MessageDTO messageDTO = messageService.sendMessage(user.get(), messageRequest);
         String json = mapper.writeValueAsString(messageDTO);
 
-        Optional<WebSocketSession> sender = Optional.of(map.get(messageDTO.getSenderId()));
-        Optional<WebSocketSession> receiver = Optional.of(map.get(messageDTO.getReceiverId()));
+        Optional<WebSocketSession> sender = Optional.ofNullable(map.get(messageDTO.getSenderId()));
+        Optional<WebSocketSession> receiver = Optional.ofNullable(map.get(messageDTO.getReceiverId()));
 
         sender.ifPresent(u -> {
             try {
                 u.sendMessage(new TextMessage(json));
             } catch (IOException e) {
-                throw new RuntimeException(e);
             }
         });
         receiver.ifPresent(u -> {
             try {
                 u.sendMessage(new TextMessage(json));
             } catch (IOException e) {
-                throw new RuntimeException(e);
             }
         });
     }

@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import springboottemplate.data_services.message.model.Message;
 import springboottemplate.data_services.message.model.MessageDTO;
-import springboottemplate.data_services.user.service.UserDTOMapper;
 
 import java.util.function.Function;
 
@@ -21,6 +20,7 @@ public class MessageDTOMapper implements Function<Message, MessageDTO> {
                 .senderId(message.getSender().getUuid())
                 .receiverId(message.getReceiver().getUuid())
                 .content(message.getContent())
+                .messageWasRead(message.isMessageWasRead())
                 .dateSent(message.getDateSent())
                 .build();
     }

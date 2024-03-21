@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 rm -rf target
-./mvnw -Pnative native:compile
+./mvnw -Pnative -DskipTests native:compile -e -X

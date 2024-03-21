@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import springboottemplate.data_services.user.model.User;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -30,5 +30,13 @@ public class Message {
 
     private String content;
 
-    private LocalDateTime dateSent;
+    private boolean messageWasRead;
+
+    private Date dateSent;
+
+    @PrePersist
+    void setDefaults() {
+        setMessageWasRead(false);
+        setDateSent(new Date());
+    }
 }
