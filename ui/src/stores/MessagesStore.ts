@@ -43,10 +43,14 @@ export const useMessagesStore = defineStore("Messages", {
                     });
             }
         },
-        findLastMessageWithUser(userDTO: UserDTO): string {
+        findLastMessageWithUser(userDTO: UserDTO): string | null {
             const messages = this.conversations
                 .find(conv => conv.friend.uuid == userDTO.uuid)!
                 .messages;
+            if (messages.length == 0) {
+                return null;
+            }
+
             const message = messages[messages.length - 1].content;
             if (message.length > 30) {
                 return `${message.substring(0, 20)}...`;
@@ -54,10 +58,15 @@ export const useMessagesStore = defineStore("Messages", {
 
             return message;
         },
-        findDateOfLastMessageWithUser(userDTO: UserDTO): string {
+        findDateOfLastMessageWithUser(userDTO: UserDTO): string | null {
             const messages = this.conversations
                 .find(conv => conv.friend.uuid == userDTO.uuid)!
                 .messages;
+
+            if (messages.length == 0) {
+                return null;
+            }
+
             const message = messages[messages.length - 1];
             return this.formatDate(message.dateSent);
         },
