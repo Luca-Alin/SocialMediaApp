@@ -4,6 +4,13 @@ import {onMounted, type Ref, ref} from "vue";
 import PostCommentSection from "../components/PostCommentSection.vue";
 import {usePostsStore} from "../stores/PostsStore";
 import {storeToRefs} from "pinia";
+import {PostReactionType} from "../services/post-service/model/PostReactionType";
+import {formatDate} from "../services/format-date-service/FormatDateService";
+import {useUserInfoStore} from "../stores/UserInfoStore";
+import postService from "../services/post-service/PostService";
+
+const userInfo = useUserInfoStore();
+const {user} = storeToRefs(userInfo);
 
 const postsStore = usePostsStore();
 const {posts} = storeToRefs(postsStore);
@@ -16,96 +23,130 @@ const props = defineProps({
 
 const post: Ref<PostDTO | null> = ref(null);
 const bootstrapId: Ref<string | null> = ref(null);
+let imagesIndex: Ref<number[]> = ref([]);
 onMounted(() => {
   post.value = posts.value.get(props.postId!) as PostDTO;
   bootstrapId.value = `bootstrapId-${post.value?.uuid}`;
 
-  console.log(post.value);
+  // if there is a single image, there will be no indicators for the carousel
+  if (post!.value!.images!.length > 1)
+    for (let i = 1; i <= post!.value!.images!.length; i++)
+      imagesIndex.value.push(i);
 });
+
+function numberOfPostReactionTypes(postRT: PostReactionType) {
+  return post.value?.postReactions?.filter(prt => prt.postReactionType == postRT).length;
+}
+
+function isThisMyReaction(postRT: PostReactionType): boolean {
+  return post.value?.postReactions?.filter(prt => {
+    return prt.userId == user.value.uuid && prt.postReactionType == postRT;
+  }).length == 1;
+}
+
+function addPostReaction(postReactionType: PostReactionType) {
+  postService.addPostReaction(post!.value!, postReactionType)
+      .then((res) => {
+        post!.value!.postReactions! = res.data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+}
+
 </script>
 
 <template>
-  <div class="container border border-1">
-    <div>
-      <router-link :to="{
-      name: `User`,
-      params: {
-        id: `${post?.user.uuid}`
-      }
-    }"
-      >{{ post?.user.firstName }} {{ post?.user.lastName }}
-      </router-link>
+  <div class="flex-fill border border-1 bg-primary rounded-3 bg-white" style="max-width: 600px">
+
+    <div class="d-flex m-2">
+      <div class="ms-2 d-flex justify-content-center align-items-center align-content-center">
+        <router-link :to="{
+              name: `User`,
+              params: {id: `${post?.user?.uuid}`}}">
+          <img :src="`data:image/png;base64,${post?.user?.profileImage}`"
+               class="rounded-circle"
+               width="40" height="40" alt=""/>
+        </router-link>
+      </div>
+      <div class="ms-2 d-flex flex-column flex-fill">
+        <div>
+          <router-link :to="{
+              name: `User`,
+              params: {id: `${post?.user?.uuid}`}}">
+            {{ post?.user?.firstName }} {{ post?.user?.lastName }}
+          </router-link>
+        </div>
+        <div>
+          {{ `${(post?.createdAt != null) ? formatDate(post!.createdAt!) : ""}` }}
+        </div>
+      </div>
+
+      <!-- Delete Post Button -->
+      <div v-if="post?.user?.uuid == user?.uuid" class="me-1">
+        <button class="btn btn-danger">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash"
+               viewBox="0 0 16 16">
+            <path
+                d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+            <path
+                d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+
+    <div class="ms-2 me-2 d-flex justify-content-center overflow-hidden">
+      <div>
+        {{ post?.content }}
+      </div>
     </div>
 
     <!-- Post Images Carousel -->
-    <div :id="bootstrapId!" class="carousel carousel-dark slide">
+    <div :id="bootstrapId!" class="carousel carousel slide">
       <div class="carousel-indicators">
-        <button type="button" :data-bs-target="`#${bootstrapId}`" data-bs-slide-to="0" class="active"
+        <button v-for="i in imagesIndex"
+                type="button" :data-bs-target="`#${bootstrapId}`" :data-bs-slide-to="i - 1" class="active"
                 aria-current="true"
-                aria-label="Slide 1"></button>
-        <button type="button" :data-bs-target="`#${bootstrapId}`" data-bs-slide-to="1" aria-label="Slide 2"></button>
-        <button type="button" :data-bs-target="`#${bootstrapId}`" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                :aria-label="`Slide ${i}`">
+        </button>
       </div>
       <div class="carousel-inner">
-        <div class="carousel-item active" data-bs-interval="10000">
-          <svg class="bd-placeholder-img bd-placeholder-img-lg d-block w-100" width="800" height="400"
-               xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: First slide"
-               preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title>
-            <rect width="100%" height="100%" fill="#f5f5f5" data-darkreader-inline-fill=""
-                  style="--darkreader-inline-fill: #1e2021;"></rect>
-            <text x="50%" y="50%" fill="#aaa" dy=".3em" data-darkreader-inline-fill=""
-                  style="--darkreader-inline-fill: #b2aca2;">First slide
-            </text>
-          </svg>
-          <div class="carousel-caption d-none d-md-block">
-            <h5>First slide label</h5>
-            <p>Some representative placeholder content for the first slide.</p>
-          </div>
+        <div v-if="post?.images != null && post.images.length > 0" class="carousel-item active"
+             data-bs-interval="10000">
+          <img :src="`data:image/png;base64,${post?.images[0]}`"
+               class="bd-placeholder-img bd-placeholder-img-lg d-block w-100" width="40" height="500" alt="">
         </div>
-        <div class="carousel-item" data-bs-interval="2000">
-          <svg class="bd-placeholder-img bd-placeholder-img-lg d-block w-100" width="800" height="400"
-               xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Second slide"
-               preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title>
-            <rect width="100%" height="100%" fill="#eee" data-darkreader-inline-fill=""
-                  style="--darkreader-inline-fill: #dddad6;"></rect>
-            <text x="50%" y="50%" fill="#bbb" dy=".3em" data-darkreader-inline-fill=""
-                  style="--darkreader-inline-fill: #bdb7af;">Second slide
-            </text>
-          </svg>
-          <div class="carousel-caption d-none d-md-block">
-            <h5>Second slide label</h5>
-            <p>Some representative placeholder content for the second slide.</p>
-          </div>
-        </div>
-        <div class="carousel-item">
-          <svg class="bd-placeholder-img bd-placeholder-img-lg d-block w-100" width="800" height="400"
-               xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Third slide"
-               preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title>
-            <rect width="100%" height="100%" fill="#e5e5e5" data-darkreader-inline-fill=""
-                  style="--darkreader-inline-fill: #d8d4cf;"></rect>
-            <text x="50%" y="50%" fill="#999" dy=".3em" data-darkreader-inline-fill=""
-                  style="--darkreader-inline-fill: #a8a095;">Third slide
-            </text>
-          </svg>
-          <div class="carousel-caption d-none d-md-block">
-            <h5>Third slide label</h5>
-            <p>Some representative placeholder content for the third slide.</p>
+        <div v-if="post?.images != null && post!.images!.length > 1" v-for="image in post?.images">
+          <div v-if="image != post.images[0]" class="carousel-item" data-bs-interval="2000">
+            <img :src="`data:image/png;base64,${image}`" class="bd-placeholder-img bd-placeholder-img-lg d-block w-100"
+                 width="800" height="400" alt="">
           </div>
         </div>
       </div>
-      <button class="carousel-control-prev" type="button" :data-bs-target="`#${bootstrapId}`" data-bs-slide="prev">
+      <button v-if="post?.images && post.images.length > 1" class="carousel-control-prev" type="button"
+              :data-bs-target="`#${bootstrapId}`" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Previous</span>
       </button>
-      <button class="carousel-control-next" type="button" :data-bs-target="`#${bootstrapId}`" data-bs-slide="next">
+      <button v-if="post?.images && post.images.length > 1" class="carousel-control-next" type="button"
+              :data-bs-target="`#${bootstrapId}`" data-bs-slide="next">
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Next</span>
       </button>
     </div>
 
     <!-- Other Post Data -->
-    <div>
-      {{ post?.content }}
+    <div v-if="post" class="d-flex">
+      <button v-for="reaction in Object.keys(PostReactionType)"
+              class="post-reaction-btn btn flex-fill"
+              @click="addPostReaction(reaction)">
+        <span :class="isThisMyReaction(reaction) ? 'border border-primary border-1 rounded-circle pt-2 pb-2 ps-1 pe-2' : ''">
+          {{ numberOfPostReactionTypes(reaction) }}
+          {{ PostReactionType[reaction] }}
+        </span>
+      </button>
     </div>
 
     <PostCommentSection :post-id="props.postId!"/>
@@ -114,5 +155,9 @@ onMounted(() => {
 </template>
 
 <style scoped>
-
+.post-reaction-btn:active {
+  font-size: 20px;
+}
 </style>
+
+

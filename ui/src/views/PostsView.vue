@@ -8,6 +8,7 @@ import FakePost from "../components/FakePost.vue";
 import {storeToRefs} from "pinia";
 import {useUserInfoStore} from "../stores/UserInfoStore";
 import {usePostsStore} from "../stores/PostsStore";
+import PostCreationComponent from "../components/PostCreationComponent.vue";
 
 const userInfo = useUserInfoStore();
 const {user, accessToken, refreshToken} = storeToRefs(userInfo);
@@ -48,15 +49,19 @@ onMounted(() => {
 </script>
 
 <template>
-  <h1>Posts</h1>
+<!--  <h1>Posts</h1>-->
 
-  <div v-for="post in posts.values()" class="d-flex flex-row">
-    <div v-if="post === null">
+<!--  <PostCreationComponent/>-->
+
+  <div v-for="post in posts.values()" class="d-flex flex-row mt-2 mb-2">
+
+    <div v-if="post === null" class="w-100 d-flex justify-content-center">
       <FakePost/>
     </div>
-    <div v-else>
+    <div v-else class="w-100 d-flex justify-content-center">
       <PostComponent :post-id="post.uuid"/>
     </div>
+
   </div>
 </template>
 

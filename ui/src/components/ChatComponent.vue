@@ -98,18 +98,15 @@ watch(selectedUserConversation, (oldVal, newVal) => {
 </script>
 
 <template>
-  <div class="border border-primary bg-light overflow-hidden d-flex flex-column">
+  <div class="w-100 border border-secondary bg-light overflow-hidden d-flex flex-column rounded-top-4 mt-1">
 
     <!-- Chat Top Bar (that can also open and close the chat) -->
     <div class="d-flex justify-content-center align-content-center">
       <button
-          class="btn btn-secondary btn-outline-primary text-light w-100 h-100 rounded-0"
+          class="btn btn-primary text-light w-100 h-100 rounded-0"
           v-if="socketIsConnected"
-          @click="/*chatIsMaximised = !chatIsMaximised;*/
-          emit('maximize-request', 'maximize');
-          chatIsMaximised = !chatIsMaximised
-          "
-      >Chat is live
+          @click="emit('maximize-request', 'maximize'); chatIsMaximised = !chatIsMaximised;">
+        Chat {{ (false) ? `() unread messages` : `` }}
       </button>
       <p v-else>Chat is offline</p>
     </div>
@@ -122,7 +119,7 @@ watch(selectedUserConversation, (oldVal, newVal) => {
       <div v-if="selectedUser" class="d-flex flex-fill flex-column overflow-y-hidden">
         <div class="d-flex">
           <header class="d-flex bg-primary w-100">
-
+            <!---->
             <!-- Leave Chat Button -->
             <button type="button" class="btn btn-primary rounded-0" @click="selectedUser = null">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -162,7 +159,7 @@ watch(selectedUserConversation, (oldVal, newVal) => {
                 </div>
               </div>
             </div>
-
+            <!---->
             <div v-else class="d-flex">
               <img class="rounded-circle"
                    :src="`data:image/png;base64,${selectedUser?.profileImage}`"
@@ -173,7 +170,7 @@ watch(selectedUserConversation, (oldVal, newVal) => {
             </div>
           </div>
         </div>
-
+        <!---->
         <!-- Form for sending messages -->
         <div class="d-flex p-1">
           <form class="flex-fill d-flex" @submit.prevent>
@@ -190,36 +187,36 @@ watch(selectedUserConversation, (oldVal, newVal) => {
           </form>
         </div>
       </div>
-
+      <!---->
       <!-- All Conversations Panel -->
       <div v-else
            class="overflow-y-auto h-100 w-100 custom-scrollbar">
         <div v-for="conversation in conversations">
-
+          <!---->
           <!-- Individual Conversation -->
           <div class="conversation-item btn d-flex align-content-center justify-content-between w-100 rounded-0"
-                  @click="selectUserForConversation(conversation.friend)">
-
+               @click="selectUserForConversation(conversation.friend)">
+            <!---->
             <div class="d-flex justify-content-center align-content-center align-items-center">
               <img class="rounded-circle me-3 d-block"
                    :src="`data:image/png;base64,${conversation.friend.profileImage}`"
                    width="40" height="40" alt="">
             </div>
-
+            <!---->
             <div class="d-flex flex-fill flex-column align-items-start">
-              <div class="fs-4">
-              {{ conversation.friend.firstName }} {{ conversation.friend.lastName }}
+              <div class="fs-6">
+                {{ conversation.friend.firstName }} {{ conversation.friend.lastName }}
               </div>
               <div class="d-flex justify-content-start">
-              {{ messageStore.findLastMessageWithUser(conversation.friend) }}
+                {{ messageStore.findLastMessageWithUser(conversation.friend) ?? "" }}
               </div>
             </div>
-
+            <!---->
             <div>
-                {{ messageStore.findDateOfLastMessageWithUser(conversation.friend) }}
+              {{ messageStore.findDateOfLastMessageWithUser(conversation.friend) ?? "" }}
             </div>
           </div>
-
+          <!---->
         </div>
       </div>
     </div>

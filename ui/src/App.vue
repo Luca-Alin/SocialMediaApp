@@ -128,6 +128,8 @@ main::-webkit-scrollbar-thumb {
     right: 1em;
     bottom: 0;
     width: 16.5em;
+    min-width: 16.5em;
+    max-width: 16.5em;
     max-height: 70vh;
     z-index: 99999;
   }

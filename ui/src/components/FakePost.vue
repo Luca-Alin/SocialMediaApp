@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <div class="container border border-1 p-1">
+  <div class="container border border-1 p-1 rounded-2">
     <div>
       <p> John Smith</p>
     </div>
