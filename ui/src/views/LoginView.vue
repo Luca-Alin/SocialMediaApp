@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import {ref} from "vue";
+import {type Ref, ref} from "vue";
 import authenticationService from "../services/authentication-service/AuthenticationService";
 import userService from "../services/user-service/UserService";
 import {useUserInfoStore} from "../stores/UserInfoStore";
 import router from "../router";
 import {storeToRefs} from "pinia";
-import type {AxiosResponse} from "axios";
+import type {AxiosError, AxiosResponse} from "axios";
 import type {AuthenticationResponse} from "../services/authentication-service/model/AuthenticationResponse";
 import {validateEmailAndPassword} from "../services/validation-service/LoginValidationService";
 
@@ -17,7 +17,7 @@ const email = ref("");
 const password = ref("");
 
 const isLoading = ref(false);
-const loginErrorMessage = ref(null);
+const loginErrorMessage : Ref<string | null> = ref(null);
 function login() {
   isLoading.value = true;
   const a = validateEmailAndPassword(email.value, password.value);
@@ -59,8 +59,12 @@ function loginSuccess(res : AxiosResponse<AuthenticationResponse>) {
 
   router.push("/posts");
 }
-function loginError(err : any) {
-  loginErrorMessage.value = err.response.data;
+function loginError(err : AxiosError) {
+  let errMessage = "Server is not working";
+  if (err?.response?.data != null) {
+    errMessage = err.response.data;
+  }
+  loginErrorMessage.value = errMessage;
   setTimeout(() => {
     loginErrorMessage.value = null;
   }, 2000);
@@ -71,8 +75,10 @@ function loginFinally() {
 </script>
 
 <template>
-
+<div class="">
   <form class="pt-5" @submit.prevent style="max-width: 420px">
+    <div class="d-flex justify-content-center fs-1">Login</div>
+
     <div v-if="loginErrorMessage" class="text-danger">
       {{ loginErrorMessage }}
     </div>
@@ -131,11 +137,14 @@ function loginFinally() {
       </p>
 
       <!-- Random Account -->
-      <p>or log in with:</p>
-      <button class="btn btn-warning" @click="randomLogin()" :disabled="isLoading">Random Account</button>
+      <div>
+        <p class="fs-5">or try the application with a:</p>
+        <button class="btn btn-warning" @click="randomLogin()" :disabled="isLoading">Random Account</button>
+      </div>
     </div>
 
   </form>
+</div>
 
 </template>
 

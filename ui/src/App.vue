@@ -32,7 +32,7 @@ const chatWindowIsOpen: Ref<boolean> = ref(false);
         <RouterView class="flex-fill d-flex justify-content-center"/>
       </div>
 
-      <div class="d-flex flex-fill">
+      <div v-if="user" class="d-flex flex-fill">
         <ChatComponent v-if="user"
                        :chat-is-maximised="chatWindowIsOpen"
                        @maximize-request="() => chatWindowIsOpen = !chatWindowIsOpen"
@@ -49,7 +49,7 @@ const chatWindowIsOpen: Ref<boolean> = ref(false);
 
 
   <!-- chat window button  -->
-  <div v-if="!chatWindowIsOpen" id="open-chat-button" class="d-md-none">
+  <div v-if="user && !chatWindowIsOpen" id="open-chat-button" class="d-md-none">
     <button
         type="button"
         class="btn btn-primary rounded-5 pt-2 pb-2"

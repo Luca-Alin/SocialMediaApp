@@ -91,13 +91,9 @@ function registerFinally() {
 </script>
 
 <template>
-  <div class="d-flex flex-column justify-content-center">
-
-    <div class="d-flex justify-content-center">
-      <h1>Register</h1>
-    </div>
-
+  <div class="">
     <form class="pt-5" @submit.prevent style="max-width: 420px">
+      <div class="d-flex justify-content-center fs-1">Login</div>
 
       <div class="d-flex">
         <div class="form-outline mb-4">
@@ -146,38 +142,46 @@ function registerFinally() {
         >{{ registerErrorMessages?.get("password") ?? "Password" }}</label>
       </div>
 
-      <!-- Remember Me -->
-      <div class="row mb-4">
-        <div class="col d-flex justify-content-center">
-          <!-- Checkbox -->
-          <div class="form-check">
-            <input class="form-check-input"
-                   type="checkbox"
-                   id="form2Example31"
-                   v-model="rememberMe"
-                   @click="userInfoStore.toggleRememberMe()"
-                   :disabled="isLoading"
-            />
-            <label class="form-check-label" for="form2Example31"> Remember me </label>
+      <div class="d-flex justify-content-between">
+
+        <!-- Remember Me -->
+        <div class="row mb-4">
+          <div class="col d-flex justify-content-center">
+            <!-- Checkbox -->
+            <div class="form-check">
+              <input class="form-check-input"
+                     type="checkbox"
+                     id="form2Example31"
+                     v-model="rememberMe"
+                     @click="userInfoStore.toggleRememberMe()"
+                     :disabled="isLoading"
+              />
+              <label class="form-check-label" for="form2Example31"> Remember me </label>
+            </div>
           </div>
+
         </div>
 
+        <!-- Submit button -->
+        <button type="button" class="btn btn-primary btn-block mb-4" @click="register()" :disabled="isLoading">Register
+        </button>
       </div>
 
-      <!-- Submit button -->
-      <button type="button" class="btn btn-primary btn-block mb-4" @click="register()" :disabled="isLoading">Sign in
-      </button>
 
       <!-- Other buttons -->
       <div class="text-center">
+
         <!-- Register User -->
         <p>Already a member?
           <router-link to="login" :disabled="isLoading">Login</router-link>
         </p>
 
         <!-- Random Account -->
-        <p>or try the application with a:</p>
-        <button class="btn btn-warning" @click="randomLogin()" :disabled="isLoading">Random Account</button>
+        <div>
+          <p class="fs-5">or try the application with a:</p>
+          <button class="btn btn-warning" @click="randomLogin()" :disabled="isLoading">Random Account</button>
+        </div>
+
       </div>
 
     </form>
