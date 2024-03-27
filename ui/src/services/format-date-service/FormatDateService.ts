@@ -1,5 +1,25 @@
+import moment from "moment";
+
 function formatDate(date: Date): string {
-    date = new Date(date);
+    const now = moment();
+    const messageDate = moment(date);
+
+    if (now.diff(messageDate, 'seconds') < 60) {
+        return 'Just now';
+    } else if (now.diff(messageDate, 'minutes') < 60) {
+        return now.diff(messageDate, 'minutes') + ' minutes ago';
+    } else if (now.isSame(messageDate, 'day')) {
+        return messageDate.format('dddd, D'); // Display day name + day number
+    } else if (now.subtract(1, 'days').isSame(messageDate, 'day')) {
+        return 'Yesterday, ' + messageDate.format('dddd, D'); // Display day name + day number for yesterday
+    } else if (now.isSame(messageDate, 'week')) {
+        return messageDate.format('dddd, D MMM'); // Display day name + day number + month name for this week
+    } else if (now.isSame(messageDate, 'year')) {
+        return messageDate.format('D MMM'); // Display day number + month name for this year
+    } else {
+        return messageDate.format('YYYY'); // Display only the year for older dates
+    }
+    /*date = new Date(date);
 
     const today = new Date();
     const currentDay = today.getDate();
@@ -27,7 +47,9 @@ function formatDate(date: Date): string {
     } else {
         // For other cases (e.g., dates from a month ago, last year, etc.), you can define your own logic here
         return date.toDateString(); // Default format for other cases
-    }
+    }*/
+
+    return "null";
 }
 
 export {formatDate};

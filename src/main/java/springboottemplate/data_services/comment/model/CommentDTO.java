@@ -4,6 +4,7 @@ import lombok.*;
 import springboottemplate.data_services.user.model.UserDTO;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -16,5 +17,5 @@ public class CommentDTO {
     private Integer id;
     private String content;
     private UserDTO user;
-    private LocalDateTime createdAt;
+    private Date createdAt;
 }

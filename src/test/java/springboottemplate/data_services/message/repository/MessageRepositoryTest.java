@@ -1,5 +1,6 @@
 package springboottemplate.data_services.message.repository;
 
+import jakarta.transaction.Transactional;
 import org.aspectj.weaver.ast.Var;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
@@ -18,6 +19,7 @@ import static org.assertj.core.api.Assertions.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DataJpaTest
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
+@Transactional
 class MessageRepositoryTest {
 
     @Autowired
@@ -28,6 +30,9 @@ class MessageRepositoryTest {
 
     @BeforeAll
     void createUsers() {
+        userRepository.deleteAllInBatch();
+        messageRepository.deleteAllInBatch();
+
         User user1 = User.builder().firstName("John").lastName("Doe").email("test1@test.com").password("password").build();
         User user2 = User.builder().firstName("John").lastName("Smith").email("test2@test.com").password("password").build();
         User user3 = User.builder().firstName("Jane").lastName("Doe").email("test3@test.com").password("password").build();

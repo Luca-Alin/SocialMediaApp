@@ -30,20 +30,18 @@ function enableDeveloperMode() {
   developerStore.setDeveloperMode();
 }
 
-const accessTokenExpTime: Ref<any> = ref(null);
-const refreshTokenExpTime: Ref<any> = ref(null);
+const accessTokenExpTime: Ref<string | null> = ref(null);
+const refreshTokenExpTime: Ref<string | null> = ref(null);
 
 onMounted(() => {
-  let timer = null;
   if (developerMode.value) {
-    timer = setInterval(() => {
-      accessTokenExpTime.value = developerService.getTokenExpirationTime(accessToken.value);
-      refreshTokenExpTime.value = developerService.getTokenExpirationTime(refreshToken.value);
+    setInterval(() => {
+      accessTokenExpTime.value = `${developerService.getTokenExpirationTime(accessToken.value)}s`;
+      refreshTokenExpTime.value = `${developerService.getTokenExpirationTime(refreshToken.value)}s`;
     }, 1000);
   } else {
     accessTokenExpTime.value = null;
     refreshTokenExpTime.value = null;
-    timer = null;
   }
 });
 watch((developerMode), () => {

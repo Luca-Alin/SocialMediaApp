@@ -3,7 +3,6 @@ import {onMounted, type Ref, ref} from "vue";
 import type {PostDTO} from "../services/post-service/model/PostDTO";
 import postService from "../services/post-service/PostService";
 import {usePostsStore} from "../stores/PostsStore";
-import {storeToRefs} from "pinia";
 
 const postsStore = usePostsStore();
 
@@ -16,17 +15,21 @@ function deleteImage(image: any) {
 }
 
 function createPost() {
+  console.log(images.value.length);
   const post: PostDTO = {
     images: images.value.map((img: string) => img.split("data:image/png;base64,")[1]),
     content: postContent.value,
-    comments: null,
-    createdAt: null,
-    uuid: null,
-    user: null
+    comments: null!,
+    createdAt: null!,
+    uuid: null!,
+    user: null!,
+    postReactions: null!
   };
+
   postService.createPost(post)
       .then(res => {
-        postsStore.addPost(res.data);
+        console.log(res.data);
+        postsStore.posts.unshift(res.data);
       })
       .catch(err => {
         console.log(err);
@@ -110,32 +113,31 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="p-1">
+  <div style="max-width: 500px">
+
     <div class="d-flex flex-column">
-      Content:
-      <div class="d-flex">
-        <div>
-          <textarea rows="5" cols="25" v-model="postContent"></textarea>
-        </div>
-
-        <div class="d-flex flex-column">
-          <div v-for="content in postContent.split('\n')">
-            {{ content }}
-          </div>
-        </div>
-
+      <div class="d-flex flex-fill p-3">
+        <textarea class="w-100 rounded-5 bg-transparent p-3 text-area custom-scrollbar"
+                  rows="5" cols="25"
+                  v-model="postContent"
+                  placeholder="post about..."
+        ></textarea>
       </div>
     </div>
 
-    <div class="d-flex justify-content-center flex-column align-content-center border border-dark border-1"
+    <div class="d-flex justify-content-center flex-column align-content-center rounded-4"
          id="dropArea">
-      <div>Drag images here</div>
 
-      <br/>
-      <input type="file" id="imageUploadInput">
-      <br/>
+      <div class="d-flex flex-column justify-content-center align-content-center align-items-center pt-5 pb-5">
+        <div class="d-flex justify-content-center">
+          <input type="file" id="imageUploadInput">
+        </div>
+        <div class="d-flex justify-content-center">
+          Or drag and drop
+        </div>
+      </div>
 
-      <div class="d-flex">
+      <div class="d-flex flex-wrap">
         <div v-for="image in images">
           <img :src="image" width="50" height="50" alt="" class="p-1">
           <button @click="deleteImage(image)" class="btn btn-danger">X</button>
@@ -143,7 +145,7 @@ onMounted(() => {
       </div>
     </div>
 
-    <div class="d-flex justify-content-center">
+    <div class="d-flex justify-content-center pt-2">
       <button class="btn btn-primary" @click="createPost()">Post!</button>
     </div>
   </div>
@@ -151,4 +153,33 @@ onMounted(() => {
 
 <style scoped>
 
+
+#dropArea {
+  border: 1px dashed black;
+}
+
+.text-area {
+  resize: none;
+  border: none;
+}
+
+.text-area:focus {
+  resize: none;
+  outline: none;
+  border: none;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 0.45em;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: lightgray;
+  outline: 1px solid slategrey;
+  border-radius: 20px;
+}
 </style>

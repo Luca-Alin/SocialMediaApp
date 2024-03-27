@@ -1,5 +1,6 @@
 package springboottemplate.data_services.friendship.repository;
 
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +25,9 @@ class FriendshipRepositoryTest {
 
     @BeforeEach
     void setUp() {
+        friendshipRepository.deleteAllInBatch();
+        userRepository.deleteAllInBatch();
+
         User user1 = User.builder().firstName("John").lastName("Doe").email("test1@test.com").password("password").build();
         User user2 = User.builder().firstName("John").lastName("Smith").email("test2@test.com").password("password").build();
         User user3 = User.builder().firstName("Jane").lastName("Doe").email("test3@test.com").password("password").build();
@@ -33,8 +37,7 @@ class FriendshipRepositoryTest {
 
     @AfterEach
     void tearDown() {
-        friendshipRepository.deleteAll();
-        userRepository.deleteAll();
+
     }
 
 

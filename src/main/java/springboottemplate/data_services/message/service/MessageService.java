@@ -16,10 +16,7 @@ import springboottemplate.data_services.user.model.UserDTO;
 import springboottemplate.data_services.user.repository.UserRepository;
 import springboottemplate.data_services.user.service.UserDTOMapper;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -65,6 +62,17 @@ public class MessageService {
                             .toList();
 
                     return new Conversation(userDTO, messageDTOs);
+                })
+                .sorted((a, b) -> {
+                    if (a.getMessages().isEmpty()) {
+                        return -1;
+                    } else if (b.getMessages().isEmpty()) {
+                        return 1;
+                    }
+                    long aTime = a.getMessages().getLast().getDateSent().getTime();
+                    long bTime = b.getMessages().getLast().getDateSent().getTime();
+
+                    return -1 * Long.compare(aTime, bTime);
                 })
                 .toList();
     }

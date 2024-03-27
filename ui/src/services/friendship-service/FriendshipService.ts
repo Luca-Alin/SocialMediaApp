@@ -1,5 +1,5 @@
 import {UserDTO} from "../user-service/model/UserDTO";
-import axios from "axios";
+import axios, {AxiosResponse} from "axios";
 import {FriendshipStatus} from "./model/FriendshipStatus";
 
 class FriendshipService {
@@ -12,8 +12,8 @@ class FriendshipService {
         return axios.post<FriendshipStatus>(`${this.url}/accept`, user);
     }
 
-    public friendshipStatus(user: UserDTO) {
-        return axios.post<FriendshipStatus>(`${this.url}/accept`, user);
+    public friendshipStatus(user: UserDTO) : Promise<AxiosResponse<FriendshipStatus>> {
+        return axios.post<FriendshipStatus>(`${this.url}/friendship-status`, user);
     }
 }
 

@@ -7,6 +7,7 @@ import springboottemplate.data_services.post.model.Post;
 import springboottemplate.data_services.user.model.User;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -36,11 +37,11 @@ public class Comment {
     private User user;
 
     @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    private Date createdAt;
 
     @PrePersist
     public void prePersist() {
         if (createdAt == null)
-            createdAt = LocalDateTime.now();
+            createdAt = new Date();
     }
 }

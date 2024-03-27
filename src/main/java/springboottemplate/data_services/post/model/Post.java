@@ -9,6 +9,7 @@ import springboottemplate.data_services.user.model.User;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static jakarta.persistence.FetchType.EAGER;
@@ -37,7 +38,7 @@ public class Post {
     private String content;
 
     @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    private Date createdAt;
 
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
@@ -52,6 +53,6 @@ public class Post {
     @PrePersist
     public void prePersist() {
         if (createdAt == null)
-            createdAt = LocalDateTime.now();
+            createdAt = new Date();
     }
 }

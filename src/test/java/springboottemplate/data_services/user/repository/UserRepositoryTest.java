@@ -1,5 +1,6 @@
 package springboottemplate.data_services.user.repository;
 
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +23,16 @@ public class UserRepositoryTest {
 
     @BeforeEach
     public void tearDown() {
-        userRepository.deleteAll();
+        userRepository.deleteAllInBatch();
     }
 
     @Test
     public void UserRepository_Save_ReturnSavedUsers() {
         //Arrange
-        String eml = "john_smith@test.com", ln = "John", fn ="Smith", pwd = "password";
+        String eml = "john_smith@test.com",
+                ln = "John",
+                fn = "Smith",
+                pwd = "password";
         User user = User.builder().email(eml).lastName(ln).firstName(fn).password(pwd).build();
 
         //Act
@@ -131,6 +135,7 @@ public class UserRepositoryTest {
     @Test
     public void UserRepositoryTest_searchByQueryString_ReturnsListOfUser() {
         //Arrange and act
+
         User johnDoe = userRepository.save(
                 User.builder().email("test1@test.com").firstName("John").lastName("Doe").password("password").build()
         );
@@ -143,6 +148,7 @@ public class UserRepositoryTest {
         User janeSmith = userRepository.save(
                 User.builder().email("test4@test.com").firstName("Jane").lastName("Smith").password("password").build()
         );
+
 
         String query1 = "John Smith";
         List<User> search1 = userRepository.searchByQueryString(query1);

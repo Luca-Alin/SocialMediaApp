@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {storeToRefs} from "pinia";
-import {onMounted, type Ref, ref, watch} from "vue";
+import {computed, onMounted, type Ref, ref, watch} from "vue";
 import {useUserInfoStore} from "../stores/UserInfoStore";
 import router from "../router";
 import chatService from "../services/chat-service/ChatService";
@@ -19,11 +19,29 @@ const socketIsConnected = ref(chatService.webSocketIsConnected);
 const messageStore = useMessagesStore();
 const {conversations} = storeToRefs(messageStore);
 
+
+
 const selectedUser: Ref<UserDTO | null> = ref(null);
 const selectedUserConversation: Ref<Conversation | null> = ref(null);
 
+watchHeightChanges();
+function watchHeightChanges() {
+  let previousHeight = 0;
+  setInterval(() => {
+    if (!selectedUser.value) return;
 
-const props = defineProps({
+    const div = document.getElementById("messageContainer");
+    if (!div) return;
+
+    const currentHeight = div.scrollHeight;
+    if (currentHeight !== previousHeight) {
+      previousHeight = currentHeight;
+      div.scrollTop = div.scrollHeight;
+    }
+  }, 1000 /60);
+}
+
+defineProps({
   chatIsMaximised: Boolean
 });
 const emit = defineEmits(["maximize-request"]);
@@ -32,6 +50,7 @@ const emit = defineEmits(["maximize-request"]);
 function selectUserForConversation(user: UserDTO) {
   selectedUser.value = user;
   selectedUserConversation.value = conversations.value.find(cnv => cnv.friend.uuid == user.uuid)!;
+
 }
 
 const currentMessage = ref("");
@@ -73,6 +92,7 @@ onMounted(async () => {
 });
 
 function handleEnter(event: KeyboardEvent) {
+
   if (event.shiftKey) {
     return;
   } else {
@@ -80,25 +100,15 @@ function handleEnter(event: KeyboardEvent) {
   }
 }
 
-watch(selectedUserConversation, (oldVal, newVal) => {
-  if (selectedUserConversation.value == null)
-    return;
-  console.log("yes-1");
 
-  const container = document.getElementById("messageContainer");
-  if (container == null)
-    return;
-  console.log("yes-2");
 
-  container.scrollTop = container.scrollHeight + 50;
-  console.log("yes-3");
-}, {
-  deep: true
-});
 </script>
 
 <template>
-  <div class="w-100 border border-secondary bg-light overflow-hidden d-flex flex-column rounded-top-4 mt-1">
+
+  <div class="w-100 border border-secondary bg-light overflow-hidden d-flex flex-column rounded-top-4 mt-1"
+    :class="(chatIsMaximised) ? 'h-100' : ''"
+  >
 
     <!-- Chat Top Bar (that can also open and close the chat) -->
     <div class="d-flex justify-content-center align-content-center">
@@ -119,7 +129,7 @@ watch(selectedUserConversation, (oldVal, newVal) => {
       <div v-if="selectedUser" class="d-flex flex-fill flex-column overflow-y-hidden">
         <div class="d-flex">
           <header class="d-flex bg-primary w-100">
-            <!---->
+
             <!-- Leave Chat Button -->
             <button type="button" class="btn btn-primary rounded-0" @click="selectedUser = null">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -130,12 +140,14 @@ watch(selectedUserConversation, (oldVal, newVal) => {
             </button>
 
             <!-- Friend Name and Picture -->
-            <button class="btn btn-primary rounded-0 w-100">
-              <img class="rounded-circle"
-                   :src="`data:image/png;base64,${selectedUser?.profileImage}`"
-                   width="40" height="40" alt="">
-              {{ selectedUser?.firstName }} {{ selectedUser?.lastName }}
-            </button>
+            <router-link :to="`/user/${selectedUser?.uuid}`" class="w-100">
+              <button class="btn btn-primary rounded-0 w-100">
+                <img class="rounded-circle"
+                     :src="`data:image/png;base64,${selectedUser?.profileImage}`"
+                     width="40" height="40" alt="">
+                {{ selectedUser?.firstName }} {{ selectedUser?.lastName }}
+              </button>
+            </router-link>
           </header>
         </div>
 
@@ -149,17 +161,9 @@ watch(selectedUserConversation, (oldVal, newVal) => {
                 <div>
                   {{ message.content }}
                 </div>
-                <div class="d-flex flex-row-reverse">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="white" class="p-0 m-0 border-0">
-                    <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/>
-                  </svg>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="white" class="p-0 m-0 border-0" style="margin-right: -6px;">
-                    <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/>
-                  </svg>
-                </div>
               </div>
             </div>
-            <!---->
+
             <div v-else class="d-flex">
               <img class="rounded-circle"
                    :src="`data:image/png;base64,${selectedUser?.profileImage}`"
@@ -170,7 +174,7 @@ watch(selectedUserConversation, (oldVal, newVal) => {
             </div>
           </div>
         </div>
-        <!---->
+
         <!-- Form for sending messages -->
         <div class="d-flex p-1">
           <form class="flex-fill d-flex" @submit.prevent>
@@ -187,22 +191,22 @@ watch(selectedUserConversation, (oldVal, newVal) => {
           </form>
         </div>
       </div>
-      <!---->
+
       <!-- All Conversations Panel -->
       <div v-else
            class="overflow-y-auto h-100 w-100 custom-scrollbar">
         <div v-for="conversation in conversations">
-          <!---->
+
           <!-- Individual Conversation -->
           <div class="conversation-item btn d-flex align-content-center justify-content-between w-100 rounded-0"
                @click="selectUserForConversation(conversation.friend)">
-            <!---->
+
             <div class="d-flex justify-content-center align-content-center align-items-center">
               <img class="rounded-circle me-3 d-block"
                    :src="`data:image/png;base64,${conversation.friend.profileImage}`"
                    width="40" height="40" alt="">
             </div>
-            <!---->
+
             <div class="d-flex flex-fill flex-column align-items-start">
               <div class="fs-6">
                 {{ conversation.friend.firstName }} {{ conversation.friend.lastName }}
@@ -211,12 +215,12 @@ watch(selectedUserConversation, (oldVal, newVal) => {
                 {{ messageStore.findLastMessageWithUser(conversation.friend) ?? "" }}
               </div>
             </div>
-            <!---->
+
             <div>
               {{ messageStore.findDateOfLastMessageWithUser(conversation.friend) ?? "" }}
             </div>
           </div>
-          <!---->
+
         </div>
       </div>
     </div>

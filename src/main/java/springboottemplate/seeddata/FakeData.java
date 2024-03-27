@@ -51,26 +51,26 @@ public class FakeData {
 
     @Bean
     public CommandLineRunner commandLineRunner() {
-        return _ -> {
+        return args -> {
             long timer = System.currentTimeMillis();
             generateUsers();
-            System.out.println(STR."Time to generate users: \{(System.currentTimeMillis() - timer) / 1000.0}");
+            System.out.printf("Time to generate users: %s%n", (System.currentTimeMillis() - timer) / 1000.0);
 
             timer = System.currentTimeMillis();
             generateFriendships();
-            System.out.println(STR."Time to generate friendships: \{(System.currentTimeMillis() - timer) / 1000.0}");
+            System.out.printf("Time to generate friendships: %s%n", (System.currentTimeMillis() - timer) / 1000.0);
 
             timer = System.currentTimeMillis();
-            generatePosts();
-            System.out.println(STR."Time to generate posts: \{(System.currentTimeMillis() - timer) / 1000.0}");
+//            generatePosts();
+            System.out.printf("Time to generate posts: %s%n", (System.currentTimeMillis() - timer) / 1000.0);
 
             timer = System.currentTimeMillis();
-            generateComments();
-            System.out.println(STR."Time to generate comments: \{(System.currentTimeMillis() - timer) / 1000.0}");
+//            generateComments();
+            System.out.printf("Time to generate comments: %s%n", (System.currentTimeMillis() - timer) / 1000.0);
 
             timer = System.currentTimeMillis();
             generateMessages();
-            System.out.println(STR."Time to generate messages: \{(System.currentTimeMillis() - timer) / 1000.0}");
+            System.out.printf("Time to generate messages: %s%n", (System.currentTimeMillis() - timer) / 1000.0);
 
             System.out.println("Done!");
         };
@@ -169,10 +169,12 @@ public class FakeData {
                                     .image(img)
                                     .build())
                             .toList())
+                    .createdAt(new Date(random.nextLong(System.currentTimeMillis())))
                     .build();
             posts.add(post);
         });
 
+        posts.sort(Comparator.comparingLong(a -> a.getCreatedAt().getTime()));
         postRepository.saveAll(posts);
     }
 
@@ -192,10 +194,12 @@ public class FakeData {
                     .builder()
                     .post(post)
                     .user(user)
+                    .createdAt(new Date(random.nextLong(post.getCreatedAt().getTime(), System.currentTimeMillis())))
                     .content(content)
                     .build();
             comments.add(comment);
         });
+        comments.sort(Comparator.comparingLong(a -> a.getCreatedAt().getTime()));
 
         commentRepository.saveAll(comments);
     }
@@ -221,10 +225,12 @@ public class FakeData {
                     .sender(sender)
                     .receiver(receiver)
                     .content(content)
+                    .dateSent(new Date(random.nextLong(System.currentTimeMillis())))
                     .build();
             messages.add(message);
         });
 
+        messages.sort(Comparator.comparingLong(a -> a.getDateSent().getTime()));
         messageRepository.saveAll(messages);
     }
 
@@ -276,8 +282,8 @@ public class FakeData {
             reader.close();
 
 
-            Quote quote = mapper.readValue(response.toString(), Quote.class);
-            text = quote.quote;
+            FakeQuote quote = mapper.readValue(response.toString(), FakeQuote.class);
+            text = quote.getQuote();
 
             connection.disconnect();
         } catch (Exception e) {
@@ -287,7 +293,4 @@ public class FakeData {
         return text;
     }
 
-    record Quote(Integer id, String quote, String author) {
-
-    }
 }

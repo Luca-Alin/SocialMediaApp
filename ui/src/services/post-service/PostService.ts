@@ -4,10 +4,10 @@ import type {PostReactionType} from "src/services/post-service/model/PostReactio
 import type {PostReaction} from "../services/post-service/model/PostReaction";
 
 class PostService {
-    url = "/posts";
+    url: string = "/posts";
 
-    public findAllByUserAndFriends() {
-        return axios.get<PostDTO[]>(`${this.url}/`);
+    public findAllByUserAndFriends(pageNumber: number, pageSize: number): Promise<AxiosResponse<PostDTO[]>> {
+        return axios.get<PostDTO[]>(`${this.url}/?pageNumber=${pageNumber}&pageSize=${pageSize}`);
     }
 
     public findByUserId(id: string) {
@@ -15,17 +15,18 @@ class PostService {
     }
 
     public createPost(post: PostDTO) {
-        const imgs : {image: string}[] = post.images?.map((img) => img);
+        const mappedImages = post.images.map(img => {
+            return {
+                image: img
+            };
+        });
         return axios.post<PostDTO>(`${this.url}/`, {
-            images: [
-                {
-                    image: post.images[0]
-                }
-            ]
+            content: post.content,
+            images: mappedImages
         });
     }
 
-    public addPostReaction(post : PostDTO, postReactionType: PostReactionType) : Promise<AxiosResponse<PostReaction[]>> {
+    public addPostReaction(post: PostDTO, postReactionType: PostReactionType): Promise<AxiosResponse<PostReaction[]>> {
         return axios.post<PostReaction[]>(
             `${this.url}/reaction/${post.uuid}`, `"${postReactionType}"`, {
                 headers: {

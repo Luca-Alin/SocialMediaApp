@@ -1,5 +1,6 @@
 package springboottemplate.data_services.post.repository;
 
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
+@Transactional
 class PostRepositoryTest {
 
     @Autowired
@@ -35,6 +37,10 @@ class PostRepositoryTest {
 
     @BeforeEach
     void setUp() {
+        userRepository.deleteAllInBatch();
+        postRepository.deleteAllInBatch();
+        friendshipRepository.deleteAllInBatch();
+
         var u1 = userRepository.save(User.builder().email("test1@test.com").firstName("John").lastName("Doe").password("password").build());
         var u2 = userRepository.save(User.builder().email("test2@test.com").firstName("Jane").lastName("Doe").password("password").build());
         var u3 = userRepository.save(User.builder().email("test3@test.com").firstName("John").lastName("Smith").password("password").build());

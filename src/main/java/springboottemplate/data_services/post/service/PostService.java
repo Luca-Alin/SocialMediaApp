@@ -85,15 +85,11 @@ public class PostService {
 
     public PostDTO save(UserDetails userDetails, Post post) throws UserNotFoundException, EntityShouldNotContainAnId, InvalidPostException {
         if (post.getUuid() != null) throw new EntityShouldNotContainAnId(Post.class);
-
-//        boolean isPostValid = (post.getContent() != null && !post.getContent().isEmpty()) ||
-//                (post.getImages() != null && !post.getImages().isEmpty());
-//        if (!isPostValid)
-//            throw new InvalidPostException();
-
         User user = getUser(userDetails);
 
         post.setUser(user);
+        post.setComments(new ArrayList<>());
+        post.setPostReactions(new ArrayList<>());
         Post savedPost = postRepository.save(post);
 
         return postDTOMapper.apply(savedPost);

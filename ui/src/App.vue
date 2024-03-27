@@ -12,41 +12,31 @@ const chatWindowIsOpen: Ref<boolean> = ref(false);
 </script>
 
 <template>
+
   <div id="page-content" class="d-flex flex-column">
 
     <header>
       <NavbarComponent/>
     </header>
 
-    <main class="d-flex flex-row-reverse flex-fill overflow-auto w-100 h-100">
-
-      <!-- Chat Window Space -->
-      <div v-if="user" class="chat-windows-space">
-      </div>
+    <main class="d-flex flex-fill justify-content-center overflow-auto w-100 h-100">
 
       <!-- Content - posts, settings, user profiles etc. -->
-      <div :class="
-           (chatWindowIsOpen)
-            ? 'd-none d-sm-none d-md-block flex-fill'
-            : 'flex-fill'">
+      <div style="max-height: 300px; max-width: 768px;">
         <RouterView class="flex-fill d-flex justify-content-center"/>
       </div>
 
-      <div v-if="user" class="d-flex flex-fill">
-        <ChatComponent v-if="user"
-                       :chat-is-maximised="chatWindowIsOpen"
-                       @maximize-request="() => chatWindowIsOpen = !chatWindowIsOpen"
-                       :class="chatWindowIsOpen
-                  ? 'actual-chat d-flex d-sm-flex w-sm-100 h-100 d-md-block'
-                  : 'actual-chat d-none d-sm-none d-md-block'"/>
-      </div>
 
     </main>
 
   </div>
 
   <!-- Floating Stuff -->
-
+  <!-- Chat -->
+  <ChatComponent v-if="user"
+                 :chat-is-maximised="chatWindowIsOpen"
+                 @maximize-request="() => chatWindowIsOpen = !chatWindowIsOpen"
+                 :class="chatWindowIsOpen ? 'actual-chat' : 'dsmnone actual-chat'"/>
 
   <!-- chat window button  -->
   <div v-if="user && !chatWindowIsOpen" id="open-chat-button" class="d-md-none">
@@ -93,10 +83,17 @@ main::-webkit-scrollbar-thumb {
 }
 
 @media (max-width: 767px) {
-  /* Used in ternary operator <=> False Unused Warning || DON'T DELETE */
-  .w-sm-100 {
+  .dsmnone {
+    display: none !important;
+  }
+
+  .actual-chat {
+    position: fixed;
+    left: 0;
+    top: 40px;
     width: 100%;
   }
+
   .chat-windows-space {
     min-width: 0;
     width: 0;
@@ -116,33 +113,22 @@ main::-webkit-scrollbar-thumb {
 /* MD */
 @media (min-width: 768px) {
   .chat-windows-space {
-    min-width: 17.5em;
-    width: 17.5em;
-    max-width: 17.5em;
+    min-width: 21em;
+    width: 21em;
+    max-width: 21em;
   }
 
   /* Used in ternary operator <=> False Unused Warning || DON'T DELETE */
   .actual-chat {
-    float: right;
     position: fixed;
     right: 1em;
     bottom: 0;
-    width: 16.5em;
-    min-width: 16.5em;
-    max-width: 16.5em;
+    width: 20em;
+    min-width: 20em;
+    max-width: 20em;
     max-height: 70vh;
     z-index: 99999;
   }
-}
-
-/* XL */
-@media (min-width: 1200px) {
-  .chat-windows-space {
-    min-width: 20em;
-    width: 20em;
-    max-width: 20em;
-  }
-
 }
 
 

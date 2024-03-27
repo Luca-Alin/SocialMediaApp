@@ -30,13 +30,15 @@ public class Message {
 
     private String content;
 
-    private boolean messageWasRead;
+    private Boolean messageWasRead;
 
     private Date dateSent;
 
     @PrePersist
     void setDefaults() {
-        setMessageWasRead(false);
-        setDateSent(new Date());
+        if (messageWasRead == null)
+            setMessageWasRead(false);
+        if (dateSent == null)
+            dateSent = new Date();
     }
 }

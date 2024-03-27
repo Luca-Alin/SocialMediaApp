@@ -1,0 +1,27 @@
+[
+  {
+    "name": "springboottemplate.seeddata.FakeQuote",
+    "allDeclaredConstructors": true,
+    "allPublicMethods": true
+  },
+  {
+    "name": "springboottemplate.data_services.message.model.Message",
+    "allDeclaredConstructors": true,
+    "allPublicMethods": true
+  },
+  {
+    "name": "springboottemplate.data_services.message.model.Conversation",
+    "allDeclaredConstructors": true,
+    "allPublicMethods": true
+  },
+  {
+    "name": "springboottemplate.data_services.message.model.MessageDTO",
+    "allDeclaredConstructors": true,
+    "allPublicMethods": true
+  },
+  {
+    "name": "springboottemplate.data_services.message.model.MessageRequest",
+    "allDeclaredConstructors": true,
+    "allPublicMethods": true
+  }
+]

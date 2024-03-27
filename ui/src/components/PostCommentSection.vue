@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import {onMounted, ref, type Ref} from "vue";
 import type {CommentDTO} from "../services/comment-service/model/CommentDTO";
-import {c} from "vite/dist/node/types.d-AKzkD8vd";
-import {usePostsStore} from "../stores/PostsStore";
 import {storeToRefs} from "pinia";
 import type {PostDTO} from "../services/post-service/model/PostDTO";
+import PostComment from "../components/PostComment.vue";
+import {usePostsStore} from "../stores/PostsStore";
 import commentService from "../services/comment-service/CommentService";
 
 const postsStore = usePostsStore();
@@ -19,11 +19,13 @@ const props = defineProps({
 const comments: Ref<CommentDTO[] | null> = ref(null);
 const post: Ref<PostDTO | null> = ref(null);
 onMounted(() => {
-  post.value = (posts.value.get(props.postId!) as PostDTO);
+  post.value = posts.value
+      .find(p => p !== null && p.uuid === props.postId) as PostDTO;
   comments.value = post.value.comments;
 });
 
 const newComment = ref("");
+
 function addNewComment() {
   commentService.addComment({
     content: newComment.value,
@@ -32,7 +34,7 @@ function addNewComment() {
     id: null
   }, post.value!)
       .then(res => {
-        post.value?.comments.push(res.data);
+        post.value?.comments?.push(res.data);
       })
       .catch(err => {
         console.log(err);
@@ -58,9 +60,12 @@ function addNewComment() {
             <input type="text" v-model="newComment">
             <button @click="addNewComment();">Submit Comment</button>
           </div>
-          <div v-for="comment in comments">
-            {{comment.user.firstName}} {{ comment.user.lastName }}: {{ comment.content }}
+          <div class="d-flex flex-column-reverse">
+            <div v-for="comment in comments">
+              <PostComment :comment-prop="comment"/>
+            </div>
           </div>
+
         </div>
       </div>
     </div>

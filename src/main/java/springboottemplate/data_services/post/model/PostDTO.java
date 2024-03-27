@@ -5,6 +5,7 @@ import springboottemplate.data_services.comment.model.CommentDTO;
 import springboottemplate.data_services.user.model.UserDTO;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -17,7 +18,7 @@ import java.util.List;
 public class PostDTO {
     private String uuid;
     private String content;
-    private LocalDateTime createdAt;
+    private Date createdAt;
     private UserDTO user;
 
     private List<byte[]> images;

@@ -29,7 +29,7 @@ public class AuthController {
     private final UserRepository userRepository;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(
+    public ResponseEntity<?> register(
             @RequestBody RegisterRequest registerRequest
     ) {
         try {
@@ -39,11 +39,10 @@ public class AuthController {
             log.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Object> authenticate(
+    public ResponseEntity<?> authenticate(
             @RequestBody LoginRequest loginRequest
     ) {
         try {

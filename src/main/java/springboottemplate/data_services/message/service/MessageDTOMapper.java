@@ -20,7 +20,7 @@ public class MessageDTOMapper implements Function<Message, MessageDTO> {
                 .senderId(message.getSender().getUuid())
                 .receiverId(message.getReceiver().getUuid())
                 .content(message.getContent())
-                .messageWasRead(message.isMessageWasRead())
+                .messageWasRead(message.getMessageWasRead())
                 .dateSent(message.getDateSent())
                 .build();
     }

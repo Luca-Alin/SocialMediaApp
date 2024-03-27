@@ -3,29 +3,29 @@ import type {PostDTO} from "../services/post-service/model/PostDTO";
 
 export const usePostsStore = defineStore("Posts", {
     state: () => ({
-        posts: new Map() as Map<string, PostDTO | null>,
+        posts: [] as (PostDTO | null)[],
         index: 0
     }),
     actions: {
+        deletePosts() {
+          this.posts.length = 0;
+        },
         addPost(postDTO: PostDTO) {
-            this.posts.set(postDTO.uuid, postDTO);
+            console.log("adding post", this.posts.length);
+            this.posts.push(postDTO);
+            this.posts.sort((b, a) => {
+                return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+            });
+            console.log(this.posts.length);
         },
         addPosts(postDTOs: PostDTO[]) {
             postDTOs.forEach(post => this.addPost(post));
         },
         addFakePosts(count: number) {
-            for (let i = 0; i < count; i++) this.posts.set(`fake${this.index++}`, null);
+            for (let i = 0; i < count; i++) this.posts.push(null);
         },
         removeAllFakePosts() {
-            const entriesToRemove: string[] = [];
-            this.posts.forEach((value, key) => {
-                if (key.startsWith("fake")) {
-                    entriesToRemove.push(key);
-                }
-            });
-            entriesToRemove.forEach(key => {
-                this.posts.delete(key);
-            });
+            this.posts = this.posts.filter(p => p !== null);
         }
     }
 });

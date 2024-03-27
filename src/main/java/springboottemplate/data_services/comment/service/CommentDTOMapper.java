@@ -20,6 +20,8 @@ public class CommentDTOMapper implements Function<Comment, CommentDTO> {
                 .id(comment.getId())
                 .content(comment.getContent())
                 .user(userDTOMapper.apply(comment.getUser()))
+                .createdAt(comment.getCreatedAt())
                 .build();
     }
+
 }
