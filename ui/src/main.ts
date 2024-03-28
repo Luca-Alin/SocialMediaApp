@@ -14,7 +14,6 @@ import {useUserInfoStore} from "../src/stores/UserInfoStore";
 axios.defaults.baseURL = import.meta.env.VITE_API_URL;
 axios.interceptors.request.use(
     (config) => {
-        console.log("axios.interceptors.request.config");
 
         if (config.url?.indexOf("/public") != -1 || config.url?.indexOf("/auth") != -1)
             return config;
@@ -28,18 +27,15 @@ axios.interceptors.request.use(
         return config;
     },
     (error) => {
-        console.log("axios.interceptors.request.error");
         return Promise.reject(error);
     }
 );
 
 axios.interceptors.response.use(
     (response) => {
-        console.log("axios.interceptors.response.response");
         return response;
     },
     async (error) => {
-        console.log("axios.interceptors.response.error", error);
         const userStore = useUserInfoStore();
 
         const errorUrl: string = error.config.url;
