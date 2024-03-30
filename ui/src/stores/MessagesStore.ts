@@ -5,11 +5,13 @@ import {useUserInfoStore} from "../stores/UserInfoStore";
 import userService from "../services/user-service/UserService";
 import type {UserDTO} from "src/services/user-service/model/UserDTO";
 import {formatDate} from "../services/format-date-service/FormatDateService";
+import {ref} from "vue";
 
 export const useMessagesStore = defineStore("Messages", {
     state: () => ({
         userInfoService: useUserInfoStore(),
-        conversations: [] as Conversation[]
+        conversations: [] as Conversation[],
+        count: 0
     }),
     actions: {
         addMessage(messageDTO: MessageDTO): void {
@@ -80,7 +82,7 @@ export const useMessagesStore = defineStore("Messages", {
             return formatDate(message.dateSent);
         },
         findNumberOfUnreadMessages(userDTO: UserDTO): number {
-            const authenticatedUser : UserDTO = this.userInfoService.authenticatedUser;
+            const authenticatedUser: UserDTO = this.userInfoService.authenticatedUser;
             return this.conversations
                 .find(cnv => cnv.friend.uuid === userDTO.uuid)
                 ?.messages
@@ -96,7 +98,15 @@ export const useMessagesStore = defineStore("Messages", {
                 .filter(msg => msg.receiverId === authenticatedUser.uuid)
                 .filter(msg => !msg.messageWasRead)
                 .length;
+        },
+        setUserTyping(userId: string): void {
+            const conversation = this.conversations.find(cnv => cnv.friend.uuid === userId);
+            if (conversation) {
+                conversation.friendIsTyping = Date.now();
+            }
         }
     },
-    getters: {}
+    getters: {
+        getNumberOne : (state) => state.count * 2
+    }
 });

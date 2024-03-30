@@ -1,22 +1,24 @@
 <script setup lang="ts">
 import {storeToRefs} from "pinia";
-import {onMounted, type Ref, ref, watch} from "vue";
+import {computed, onMounted, type Ref, ref, watch} from "vue";
 import {useUserInfoStore} from "../stores/UserInfoStore";
-import chatService from "../services/chat-service/ChatService";
+import ChatService from "../services/chat-service/ChatService";
 import messageService from "../services/message-service/MessageService";
 import {useMessagesStore} from "../stores/MessagesStore";
 import type {UserDTO} from "../services/user-service/model/UserDTO";
 import type {Conversation} from "../services/chat-service/model/Conversation";
-import type {MessageRequest} from "../services/chat-service/model/MessageRequest";
+
 
 const userInfo = useUserInfoStore();
 const {authenticatedUser} = storeToRefs(userInfo);
 
 
-const socketIsConnected = ref(chatService.webSocketIsConnected);
-
 const messageStore = useMessagesStore();
 const {conversations} = storeToRefs(messageStore);
+
+const chatService = new ChatService(conversations.value);
+const socketIsConnected = ref(chatService.webSocketIsConnected);
+
 
 
 const selectedUser: Ref<UserDTO> = ref(null!);
@@ -31,22 +33,21 @@ const emit = defineEmits(["maximize-request"]);
 // TODO - reduce the boilerplatness of this code
 
 function selectUserForConversation(user: UserDTO) {
+  tag.value = "";
   selectedUser.value = user;
   selectedUserConversation.value = conversations.value.find(cnv => cnv.friend.uuid == user.uuid)!;
 }
 
 const currentMessage = ref("");
 
-function sendMessage() {
-  const message: MessageRequest = {
-    receiverId: selectedUser!.value!.uuid!,
-    content: currentMessage.value
-  };
-  chatService.sendMessage(message);
+watch(currentMessage, _ => {
+  chatService.sendTypingNotification(selectedUser.value);
+});
 
+function sendMessage() {
+  chatService.sendMessage(selectedUser.value.uuid, currentMessage.value);
   currentMessage.value = "";
 }
-
 
 
 onMounted(async () => {
@@ -78,10 +79,6 @@ watch(selectedUser, _ => {
 });
 
 
-
-
-
-
 // utility to scroll down when a new message comes from another user
 watchHeightChanges();
 
@@ -106,6 +103,20 @@ function sendMessageOnEnter(event: KeyboardEvent) {
   if (event.shiftKey) return;
   sendMessage();
 }
+
+const currentTime = ref(Date.now());
+setInterval(() => {
+  currentTime.value = Date.now();
+}, 500);
+const tag = ref("");
+const filteredConversations = computed(() => {
+  if (tag.value !== "")
+    return conversations.value.filter(cnv => {
+      const fullName : string = (cnv.friend.firstName + cnv.friend.lastName).toLowerCase();
+      return fullName.includes(tag.value)
+    });
+  return conversations.value;
+})
 </script>
 
 <template>
@@ -118,14 +129,20 @@ function sendMessageOnEnter(event: KeyboardEvent) {
     <div class="d-flex justify-content-center align-content-center">
       <button
           class="btn btn-primary text-light w-100 h-100 rounded-0"
-          v-if="socketIsConnected"
           @click="emit('maximize-request', 'maximize'); chatIsMaximised = !chatIsMaximised;">
-        Chat
-        <span v-if="messageStore.findTotalNumberOfUnreadMessages() !== 0">
-          ({{ `${messageStore.findTotalNumberOfUnreadMessages()}` }})
+        <span v-if="socketIsConnected">
+          Chat
+          <span v-if="messageStore.findTotalNumberOfUnreadMessages() !== 0">
+            ({{ `${messageStore.findTotalNumberOfUnreadMessages()}` }})
+          </span>
+        </span>
+        <span v-else>
+        Connecting chat...
+          <span v-if="chatService.retryingToConnectChat > 0">
+            ({{ chatService.retryingToConnectChat }})
+          </span>
         </span>
       </button>
-      <p v-else>Chat is offline</p>
     </div>
 
     <div v-if="chatIsMaximised"
@@ -148,11 +165,14 @@ function sendMessageOnEnter(event: KeyboardEvent) {
 
             <!-- Friend Name and Picture -->
             <router-link :to="`/user/${selectedUser?.uuid}`" class="w-100">
-              <button class="btn btn-primary rounded-0 w-100">
+              <button class="btn btn-primary rounded-0 w-100 d-flex justify-content-start">
                 <img class="rounded-circle"
                      :src="`data:image/png;base64,${selectedUser?.profileImage}`"
                      width="40" height="40" alt="">
                 {{ selectedUser?.firstName }} {{ selectedUser?.lastName }}
+                <span v-if="selectedUserConversation && currentTime - selectedUserConversation.friendIsTyping < 5000">
+                  &nbsp is typing...
+                </span>
               </button>
             </router-link>
           </header>
@@ -202,7 +222,10 @@ function sendMessageOnEnter(event: KeyboardEvent) {
       <!-- All Conversations Panel -->
       <div v-else
            class="overflow-y-auto h-100 w-100 custom-scrollbar">
-        <div v-for="conversation in conversations">
+        <div>
+          <input type="text" class="w-100 border-start-0 border-top-0 border-end-0 search-box" v-model="tag" placeholder="search user">
+        </div>
+        <div v-for="conversation in filteredConversations as typeof conversations">
 
 
           <!-- Individual Conversation -->
@@ -223,6 +246,11 @@ function sendMessageOnEnter(event: KeyboardEvent) {
                 </span>
                 {{ conversation.friend.firstName }}
                 {{ conversation.friend.lastName }}
+                <span v-if="currentTime - conversation.friendIsTyping < 5000" class="dot-container">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                </span>
               </div>
               <div class="d-flex justify-content-start">
                 {{ messageStore.findLastMessageWithUser(conversation.friend) ?? "" }}
@@ -261,5 +289,34 @@ function sendMessageOnEnter(event: KeyboardEvent) {
   background-color: lightgray;
   outline: 1px solid slategrey;
   border-radius: 20px;
+}
+
+.dot-container {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 0.2em; /* Adjust height as needed */
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #000;
+  margin: 0 5px;
+  animation: dot-animation 1s infinite;
+}
+
+@keyframes dot-animation {
+  0%, 80%, 100% {
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+}
+
+.search-box:focus {
+  outline: none;
 }
 </style>
