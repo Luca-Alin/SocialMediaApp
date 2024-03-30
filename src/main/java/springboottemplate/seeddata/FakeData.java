@@ -51,7 +51,7 @@ public class FakeData {
 
     @Bean
     public CommandLineRunner commandLineRunner() {
-        return args -> {
+        return _ -> {
             long timer = System.currentTimeMillis();
             generateUsers();
             System.out.printf("Time to generate users: %s%n", (System.currentTimeMillis() - timer) / 1000.0);
@@ -61,11 +61,11 @@ public class FakeData {
             System.out.printf("Time to generate friendships: %s%n", (System.currentTimeMillis() - timer) / 1000.0);
 
             timer = System.currentTimeMillis();
-//            generatePosts();
+            generatePosts();
             System.out.printf("Time to generate posts: %s%n", (System.currentTimeMillis() - timer) / 1000.0);
 
             timer = System.currentTimeMillis();
-//            generateComments();
+            generateComments();
             System.out.printf("Time to generate comments: %s%n", (System.currentTimeMillis() - timer) / 1000.0);
 
             timer = System.currentTimeMillis();
@@ -80,21 +80,21 @@ public class FakeData {
     public void generateUsers() {
         String hashedPassword = BCrypt.hashpw("password", BCrypt.gensalt());
 
-        Map<String, String> usersMap = new HashMap<>(Map.of(
-                "John", "Smith",
-                "James", "Doe",
-                "Robert", "Doe",
-                "Maria", "Rodriguez"
+        List<String> usersList = new ArrayList<>(List.of(
+                "John Smith",
+                "James Doe",
+                "Robert Doe",
+                "Maria Rodriguez"
         ));
 
-        List<User> users = new ArrayList<>();
-        usersMap.entrySet()
-                .stream()
-                .parallel()
-                .forEach(entry -> {
 
-                    String firstName = entry.getKey();
-                    String lastName = entry.getValue();
+        List<User> users = new ArrayList<>();
+        usersList.stream()
+                .parallel()
+                .forEach(fullName -> {
+
+                    String firstName = fullName.split(" ")[0];
+                    String lastName = fullName.split(" ")[1];
                     String email = "%s_%s@social-media.app".formatted(firstName.toLowerCase(), lastName.toLowerCase());
                     byte[] profileImage = randomImage();
                     String bio = "Hello, I am %s %s.".formatted(firstName, lastName);
@@ -148,34 +148,32 @@ public class FakeData {
         List<User> users = userRepository.findAll();
 
         List<Integer> list = new ArrayList<>(List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
-        list.stream().parallel().forEach((integer) -> {
+        list.stream().parallel().forEach(_ -> {
 
             List<String> images = new ArrayList<>();
             for (int j = 0; j < random.nextInt(0, 4); j++) images.add("image");
             List<byte[]> postImages = new ArrayList<>();
             images.stream()
                     .parallel()
-                    .forEach((img) -> postImages.add(randomImage()));
+                    .forEach(_ -> postImages.add(randomImage()));
             String postContent = randomText();
 
             Post post = Post
                     .builder()
                     .user(users.get(random.nextInt(users.size())))
                     .content(postContent)
-                    .images(postImages
+                    .images(new ArrayList<>(postImages
                             .stream()
                             .map((img) -> PostImage
                                     .builder()
                                     .image(img)
                                     .build())
-                            .toList())
+                            .toList()))
                     .createdAt(new Date(random.nextLong(System.currentTimeMillis())))
                     .build();
-            posts.add(post);
+            postRepository.save(post);
         });
 
-        posts.sort(Comparator.comparingLong(a -> a.getCreatedAt().getTime()));
-        postRepository.saveAll(posts);
     }
 
     private void generateComments() {
@@ -186,7 +184,7 @@ public class FakeData {
 
         List<Integer> list = new ArrayList<>();
         for (int i = 0; i < 20; i++) list.add(i);
-        list.stream().parallel().forEach((integer) -> {
+        list.stream().parallel().forEach(_ -> {
             User user = users.get(random.nextInt(users.size()));
             Post post = posts.get(random.nextInt(posts.size()));
             String content = randomText();

@@ -10,7 +10,6 @@ const images: Ref<any[]> = ref([]);
 const postContent = ref("");
 
 function deleteImage(image: any) {
-
   images.value = images.value.filter(img => img != image);
 }
 
@@ -28,8 +27,9 @@ function createPost() {
 
   postService.createPost(post)
       .then(res => {
-        console.log(res.data);
-        postsStore.posts.unshift(res.data);
+        postsStore.addPost(res.data);
+        images.value = [];
+        postContent.value = "";
       })
       .catch(err => {
         console.log(err);
@@ -118,7 +118,7 @@ onMounted(() => {
     <div class="d-flex flex-column">
       <div class="d-flex flex-fill p-3">
         <textarea class="w-100 rounded-5 bg-transparent p-3 text-area custom-scrollbar"
-                  rows="5" cols="25"
+                  rows="3" cols="25"
                   v-model="postContent"
                   placeholder="post about..."
         ></textarea>

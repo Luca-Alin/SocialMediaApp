@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type {PostDTO} from "../services/post-service/model/PostDTO";
-import {onMounted, type Ref, ref} from "vue";
+import {computed, onMounted, type Ref, ref, watch} from "vue";
 import PostCommentSection from "./PostCommentSection.vue";
 import {usePostsStore} from "../stores/PostsStore";
 import {storeToRefs} from "pinia";
@@ -10,7 +10,7 @@ import {useUserInfoStore} from "../stores/UserInfoStore";
 import postService from "../services/post-service/PostService";
 
 const userInfo = useUserInfoStore();
-const {user} = storeToRefs(userInfo);
+const {authenticatedUser} = storeToRefs(userInfo);
 
 const postsStore = usePostsStore();
 const {posts} = storeToRefs(postsStore);
@@ -35,6 +35,12 @@ onMounted(() => {
       imagesIndex.value.push(i);
 });
 
+watch(posts, _ => {
+  post.value = posts.value.find(p => p?.uuid === props.postId) as PostDTO;
+}, {
+  deep: true
+})
+
 function numberOfPostReactionTypes(postRT: PostReactionType) {
   return post.value?.postReactions?.filter(prt => prt.postReactionType == postRT).length;
 }
@@ -50,16 +56,37 @@ function addPostReaction(postReactionType: PostReactionType) {
 
 function isThisMyReaction(postRT: PostReactionType): boolean {
   return post.value?.postReactions?.filter(prt => {
-    return prt.userId == user.value.uuid && prt.postReactionType == postRT;
+    return prt.userId == authenticatedUser.value.uuid && prt.postReactionType == postRT;
   }).length == 1;
+}
+
+function deletePost() {
+  postService.deletePost(post.value?.uuid!)
+      .then(_ => {
+        postsStore.deletePost(post.value!);
+      })
+      .catch(_ => {
+      })
+      .finally(() => {
+      });
+}
+
+const showLessContent: Ref<boolean> = ref(true);
+const maxWordsCount = 100;
+
+const resizableContent = computed(() => {
+  if (showLessContent.value)
+    return post.value?.content.slice(0, maxWordsCount) + "...";
+  return post.value?.content;
+});
+function toggleContent() {
+  showLessContent.value = !showLessContent.value;
 }
 
 </script>
 
 <template>
-
-
-  <div class="flex-fill border border-1 bg-primary rounded-3 bg-white" style="max-width: 600px">
+  <div v-if="post" class="flex-fill border border-1 bg-primary rounded-3 bg-white content">
     <div class="d-flex m-2">
       <div class="ms-2 d-flex justify-content-center align-items-center align-content-center">
         <router-link :to="{
@@ -84,7 +111,7 @@ function isThisMyReaction(postRT: PostReactionType): boolean {
       </div>
 
       <!-- Delete Post Button -->
-      <div v-if="post?.user?.uuid == user?.uuid" class="me-1">
+      <div v-if="post.user.uuid == authenticatedUser.uuid" class="me-1" @click="deletePost()">
         <button class="btn btn-danger">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash"
                viewBox="0 0 16 16">
@@ -98,12 +125,23 @@ function isThisMyReaction(postRT: PostReactionType): boolean {
           </svg>
         </button>
       </div>
-
     </div>
 
-    <div class="ms-2 me-2 d-flex justify-content-center overflow-hidden">
-      <div>
-        {{ post?.content }}
+    <div class="ms-2 me-2 overflow-hidden">
+      <div v-if="post">
+        <div v-if="post && post.content.length < maxWordsCount">
+          {{ post.content }}
+        </div>
+        <div v-else>
+          <div v-if="showLessContent">
+            {{ resizableContent }}
+            <a href="#" @click="toggleContent" class="btn btn-link">Show More</a>
+          </div>
+          <div v-else>
+            {{ resizableContent }}
+            <a href="#" @click="toggleContent" class="btn btn-link">Show Less</a>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -146,7 +184,8 @@ function isThisMyReaction(postRT: PostReactionType): boolean {
       <button v-for="reaction in Object.keys(PostReactionType)"
               class="post-reaction-btn btn flex-fill"
               @click="addPostReaction(reaction)">
-        <span :class="isThisMyReaction(reaction) ? 'border border-primary border-1 rounded-circle pt-2 pb-2 ps-1 pe-2' : ''">
+        <span
+            :class="isThisMyReaction(reaction) ? 'border border-primary border-1 rounded-circle pt-2 pb-2 ps-1 pe-2' : ''">
           {{ numberOfPostReactionTypes(reaction) }}
           {{ PostReactionType[reaction] }}
         </span>
@@ -155,12 +194,17 @@ function isThisMyReaction(postRT: PostReactionType): boolean {
 
     <PostCommentSection :post-id="props.postId!"/>
   </div>
-
 </template>
 
 <style scoped>
 .post-reaction-btn:active {
   font-size: 20px;
+}
+
+.content {
+  min-width: 400px;
+  width: auto;
+  max-width: 600px;
 }
 </style>
 

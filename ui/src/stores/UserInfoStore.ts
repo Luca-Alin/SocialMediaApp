@@ -7,14 +7,14 @@ export const _USER_INFO = "user_info";
 export const _REMEMBER_ME = "remember_me";
 
 export type UserInfoState = {
-    user: UserDTO | null;
+    authenticatedUser: UserDTO | null;
     accessToken: string | null;
     refreshToken: string | null;
     rememberMe: boolean;
 }
 export const useUserInfoStore = defineStore("UserInfo", {
     state: () => ({
-        user: JSON.parse(
+        authenticatedUser: JSON.parse(
             sessionStorage.getItem(_USER_INFO) ?? localStorage.getItem(_USER_INFO) ?? null
         ),
         accessToken: sessionStorage.getItem(_ACCESS_TOKEN) ?? localStorage.getItem(_ACCESS_TOKEN) ?? null,
@@ -28,7 +28,7 @@ export const useUserInfoStore = defineStore("UserInfo", {
             if (this.rememberMe) {
                 localStorage.setItem(_USER_INFO, stringify);
             }
-            this.user = user;
+            this.authenticatedUser = user;
         },
         setAccessToken(accessToken: string): void {
             this.accessToken = accessToken;
@@ -49,7 +49,7 @@ export const useUserInfoStore = defineStore("UserInfo", {
             localStorage.setItem(_REMEMBER_ME, `${this.rememberMe}`);
         },
         logoutUser() {
-            this.user = null;
+            this.authenticatedUser = null;
             this.accessToken = null;
             this.refreshToken = null;
 

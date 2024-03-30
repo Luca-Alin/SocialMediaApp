@@ -87,6 +87,7 @@ public class PostService {
         if (post.getUuid() != null) throw new EntityShouldNotContainAnId(Post.class);
         User user = getUser(userDetails);
 
+
         post.setUser(user);
         post.setComments(new ArrayList<>());
         post.setPostReactions(new ArrayList<>());

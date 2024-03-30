@@ -45,7 +45,7 @@ function reset() {
 }
 
 const userInfo = useUserInfoStore();
-const {user, accessToken, refreshToken} = storeToRefs(userInfo);
+const {authenticatedUser, accessToken, refreshToken} = storeToRefs(userInfo);
 
 onMounted(() => {
   if (accessToken.value == null) {
@@ -62,22 +62,22 @@ onMounted(() => {
 </script>
 
 <template>
-  <div v-if="USER">
+  <div v-if="USER" class="d-flex flex-column">
     <div>
       First Name: <input type="text" v-model="firstName">
     </div>
     <div>
-      First Name: <input type="text" v-model="lastName">
+      Last Name: <input type="text" v-model="lastName">
     </div>
     <div>
-      First Name: <input type="email" v-model="email">
+      Email: <input type="email" v-model="email">
     </div>
     <div>
       Bio: <input type="text" v-model="bio">
     </div>
 
-    <button @click="patchChanges()">Save Changes</button>
-    <button @click="reset()">Reset Changes</button>
+    <button @click="patchChanges()" class="btn btn-warning">Save Changes</button>
+    <button @click="reset()" class="btn btn-primary">Reset Changes</button>
   </div>
 
 

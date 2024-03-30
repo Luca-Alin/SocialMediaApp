@@ -17,8 +17,6 @@ import springboottemplate.data_services.post.model.PostReaction;
 import springboottemplate.data_services.post.model.PostReactionType;
 import springboottemplate.data_services.post.service.PostService;
 import springboottemplate.data_services.user.exceptions.UserNotFoundException;
-import springboottemplate.data_services.user.model.UserDTO;
-import springboottemplate.data_services.user.service.UserDTOMapper;
 
 import java.util.List;
 
@@ -77,6 +75,7 @@ public class PostController {
 
     record PostReactionDTO(String userId, PostReactionType postReactionType) {
     }
+
     @PostMapping("/reaction/{uuid}")
     public ResponseEntity<?> addReaction(
             @AuthenticationPrincipal UserDetails userDetails, @PathVariable String uuid, @RequestBody PostReactionType type

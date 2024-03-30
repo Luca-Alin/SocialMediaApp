@@ -4,4 +4,5 @@ export interface MessageDTO {
     receiverId: string;
     content: string;
     dateSent: Date; // Assuming LocalDateTime maps to Date in TypeScript
+    messageWasRead: boolean;
 }

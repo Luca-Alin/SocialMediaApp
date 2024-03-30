@@ -34,6 +34,10 @@ class PostService {
                 }
             });
     }
+
+    public deletePost(postId: string) : Promise<AxiosResponse<string>> {
+        return axios.delete<string>(`${this.url}/${postId}`);
+    }
 }
 
 const postService = new PostService();

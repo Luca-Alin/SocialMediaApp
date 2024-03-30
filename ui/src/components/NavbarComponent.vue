@@ -8,6 +8,7 @@ import {useDeveloperStore} from "../stores/DeveloperStore";
 import {createApp, onMounted, type Ref, ref, watch} from "vue";
 import chatService from "../services/chat-service/ChatService";
 import developerService from "../services/developer-mode-service/DeveloperService";
+import router from "../router";
 
 const pinia = createPinia();
 const app = createApp(App);
@@ -15,15 +16,17 @@ app.use(pinia);
 
 
 const userInfoStore = useUserInfoStore();
-const {user, accessToken, refreshToken} = storeToRefs(userInfoStore);
+const {authenticatedUser, accessToken, refreshToken} = storeToRefs(userInfoStore);
 
 const developerStore = useDeveloperStore();
 const {developerMode} = storeToRefs(developerStore);
 
-function logout() {
+async function logout() {
   userInfoStore.logoutUser();
   chatService.disconnect();
 
+
+  await router.push("/login");
 }
 
 function enableDeveloperMode() {
@@ -73,15 +76,15 @@ watch((developerMode), () => {
 
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
-          <li v-if="user" class="nav-item">
+          <li v-if="authenticatedUser" class="nav-item">
             <router-link to="/posts" class="nav-link active" aria-current="page" href="#">Home</router-link>
           </li>
 
-          <li v-if="user" class="nav-item dropdown">
+          <li v-if="authenticatedUser" class="nav-item dropdown">
             <!--suppress TypeScriptUnresolvedReference -->
             <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
                aria-expanded="false">
-              {{ user!.firstName }} {{ user!.lastName }}
+              {{ authenticatedUser!.firstName }} {{ authenticatedUser!.lastName }}
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
               <li>

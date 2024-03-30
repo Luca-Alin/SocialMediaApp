@@ -12,10 +12,10 @@ export const useMessagesStore = defineStore("Messages", {
         conversations: [] as Conversation[]
     }),
     actions: {
-        addMessage(messageDTO: MessageDTO) {
+        addMessage(messageDTO: MessageDTO): void {
             console.log(messageDTO);
 
-            const currentUserId = this.userInfoService.user?.uuid;
+            const currentUserId = this.userInfoService.authenticatedUser?.uuid;
 
             let senderId: string;
             if (currentUserId == messageDTO.senderId) {
@@ -79,5 +79,24 @@ export const useMessagesStore = defineStore("Messages", {
             const message = messages[messages.length - 1];
             return formatDate(message.dateSent);
         },
-    }
+        findNumberOfUnreadMessages(userDTO: UserDTO): number {
+            const authenticatedUser : UserDTO = this.userInfoService.authenticatedUser;
+            return this.conversations
+                .find(cnv => cnv.friend.uuid === userDTO.uuid)
+                ?.messages
+                .filter(msg => msg.receiverId === authenticatedUser.uuid)
+                .filter(msg => !msg.messageWasRead)
+                .length;
+        },
+        findTotalNumberOfUnreadMessages(): number {
+            const authenticatedUser: UserDTO = this.userInfoService.authenticatedUser;
+
+            return this.conversations
+                .flatMap(cnv => cnv.messages)
+                .filter(msg => msg.receiverId === authenticatedUser.uuid)
+                .filter(msg => !msg.messageWasRead)
+                .length;
+        }
+    },
+    getters: {}
 });

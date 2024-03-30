@@ -16,13 +16,11 @@ import static jakarta.persistence.FetchType.EAGER;
 
 @Getter
 @Setter
-@ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 
 @Entity
-@Table(name = "posts")
 public class Post {
 
     @Id
@@ -30,7 +28,7 @@ public class Post {
     @Column(nullable = false, updatable = false)
     private String uuid;
 
-    @OneToMany(fetch = EAGER, mappedBy = "post")
+    @OneToMany(fetch = EAGER, mappedBy = "post", orphanRemoval = true)
     @JsonManagedReference
     List<Comment> comments;
 
@@ -44,11 +42,26 @@ public class Post {
     @JoinColumn(nullable = false)
     private User user;
 
-    @ElementCollection(fetch = EAGER)
+    @OneToMany(cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<PostImage> images;
 
-    @ElementCollection(fetch = EAGER)
+    @OneToMany(cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<PostReaction> postReactions = new ArrayList<>();
+
+    public List<Comment> getComments() {
+        if (comments == null) return comments = new ArrayList<>();
+        return comments;
+    }
+    public List<PostImage> getImages() {
+        if (images == null) return images = new ArrayList<>();
+        return images;
+    }
+    public List<PostReaction> getPostReactions() {
+        if (postReactions == null) return postReactions = new ArrayList<>();
+        return postReactions;
+    }
 
     @PrePersist
     public void prePersist() {

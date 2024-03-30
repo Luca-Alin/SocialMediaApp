@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import {storeToRefs} from "pinia";
-import {computed, onMounted, type Ref, ref, watch} from "vue";
+import {onMounted, type Ref, ref, watch} from "vue";
 import {useUserInfoStore} from "../stores/UserInfoStore";
-import router from "../router";
 import chatService from "../services/chat-service/ChatService";
 import messageService from "../services/message-service/MessageService";
 import {useMessagesStore} from "../stores/MessagesStore";
@@ -11,7 +10,7 @@ import type {Conversation} from "../services/chat-service/model/Conversation";
 import type {MessageRequest} from "../services/chat-service/model/MessageRequest";
 
 const userInfo = useUserInfoStore();
-const {user, accessToken, refreshToken} = storeToRefs(userInfo);
+const {authenticatedUser} = storeToRefs(userInfo);
 
 
 const socketIsConnected = ref(chatService.webSocketIsConnected);
@@ -20,37 +19,20 @@ const messageStore = useMessagesStore();
 const {conversations} = storeToRefs(messageStore);
 
 
-
-const selectedUser: Ref<UserDTO | null> = ref(null);
-const selectedUserConversation: Ref<Conversation | null> = ref(null);
-
-watchHeightChanges();
-function watchHeightChanges() {
-  let previousHeight = 0;
-  setInterval(() => {
-    if (!selectedUser.value) return;
-
-    const div = document.getElementById("messageContainer");
-    if (!div) return;
-
-    const currentHeight = div.scrollHeight;
-    if (currentHeight !== previousHeight) {
-      previousHeight = currentHeight;
-      div.scrollTop = div.scrollHeight;
-    }
-  }, 1000 /60);
-}
+const selectedUser: Ref<UserDTO> = ref(null!);
+const selectedUserConversation: Ref<Conversation> = ref(null!);
 
 defineProps({
   chatIsMaximised: Boolean
 });
+
 const emit = defineEmits(["maximize-request"]);
 
 // TODO - reduce the boilerplatness of this code
+
 function selectUserForConversation(user: UserDTO) {
   selectedUser.value = user;
   selectedUserConversation.value = conversations.value.find(cnv => cnv.friend.uuid == user.uuid)!;
-
 }
 
 const currentMessage = ref("");
@@ -66,15 +48,11 @@ function sendMessage() {
 }
 
 
-watch(accessToken, () => {
-  if (accessToken.value == null)
-    router.push("/login");
-});
+
 onMounted(async () => {
   try {
     messageService.findAllConversations()
         .then(res => {
-          console.log(res.data);
           messageStore.conversations = res.data;
           chatService.connect();
         })
@@ -82,41 +60,70 @@ onMounted(async () => {
           console.log(err);
         });
   } catch (err) {
-    console.log(err);
-  }
-
-  if (accessToken.value == null) {
-    await router.push("/login");
-    return;
+    console.error(err);
   }
 });
 
-function handleEnter(event: KeyboardEvent) {
-
-  if (event.shiftKey) {
-    return;
-  } else {
-    sendMessage();
+watch(selectedUser, _ => {
+  if (selectedUser.value != null!) {
+    messageService.readConversation(selectedUser.value)
+        .then(_ => {
+          if (selectedUserConversation.value) {
+            selectedUserConversation.value
+                .messages
+                .forEach(m => m.messageWasRead = true);
+          }
+        });
   }
+});
+
+
+
+
+
+
+// utility to scroll down when a new message comes from another user
+watchHeightChanges();
+
+function watchHeightChanges() {
+  let previousHeight = 0;
+  setInterval(() => {
+    if (!selectedUser.value) return;
+
+    const div = document.getElementById("messageContainer");
+    if (!div) return;
+
+    const currentHeight = div.scrollHeight;
+    if (currentHeight !== previousHeight) {
+      previousHeight = currentHeight;
+      div.scrollTop = div.scrollHeight;
+    }
+  }, 1000 / 60);
 }
 
 
-
+function sendMessageOnEnter(event: KeyboardEvent) {
+  if (event.shiftKey) return;
+  sendMessage();
+}
 </script>
 
 <template>
 
-  <div class="w-100 border border-secondary bg-light overflow-hidden d-flex flex-column rounded-top-4 mt-1"
-    :class="(chatIsMaximised) ? 'h-100' : ''"
-  >
 
+  <div class="w-100 border border-secondary bg-light overflow-hidden d-flex flex-column rounded-top-4 mt-1"
+       :class="(chatIsMaximised) ? 'h-100' : ''"
+  >
     <!-- Chat Top Bar (that can also open and close the chat) -->
     <div class="d-flex justify-content-center align-content-center">
       <button
           class="btn btn-primary text-light w-100 h-100 rounded-0"
           v-if="socketIsConnected"
           @click="emit('maximize-request', 'maximize'); chatIsMaximised = !chatIsMaximised;">
-        Chat {{ (false) ? `() unread messages` : `` }}
+        Chat
+        <span v-if="messageStore.findTotalNumberOfUnreadMessages() !== 0">
+          ({{ `${messageStore.findTotalNumberOfUnreadMessages()}` }})
+        </span>
       </button>
       <p v-else>Chat is offline</p>
     </div>
@@ -131,7 +138,7 @@ function handleEnter(event: KeyboardEvent) {
           <header class="d-flex bg-primary w-100">
 
             <!-- Leave Chat Button -->
-            <button type="button" class="btn btn-primary rounded-0" @click="selectedUser = null">
+            <button type="button" class="btn btn-primary rounded-0" @click="selectedUser = null!">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                    class="bi bi-arrow-left" viewBox="0 0 16 16">
                 <path fill-rule="evenodd"
@@ -153,9 +160,9 @@ function handleEnter(event: KeyboardEvent) {
 
         <div class="flex-fill overflow-y-scroll" id="messageContainer">
           <div v-for="message in selectedUserConversation?.messages">
-            <div v-if="message.senderId == user?.uuid" class="d-flex flex-row-reverse">
+            <div v-if="message.senderId == authenticatedUser?.uuid" class="d-flex flex-row-reverse">
               <img class="rounded-circle"
-                   :src="`data:image/png;base64,${user?.profileImage}`"
+                   :src="`data:image/png;base64,${authenticatedUser?.profileImage}`"
                    width="40" height="40" alt="">
               <div class="d-flex flex-column rounded-2 bg-primary m-2 p-1 text-light">
                 <div>
@@ -179,7 +186,7 @@ function handleEnter(event: KeyboardEvent) {
         <div class="d-flex p-1">
           <form class="flex-fill d-flex" @submit.prevent>
             <textarea class="flex-fill rounded-2 m-1 custom-scrollbar" style="resize: none" v-model="currentMessage"
-                      @keyup.enter.prevent="handleEnter">
+                      @keyup.enter.prevent="sendMessageOnEnter">
             </textarea>
             <button class="btn btn-primary m-1 rounded-circle" @click="sendMessage()">
               <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-send"
@@ -197,6 +204,7 @@ function handleEnter(event: KeyboardEvent) {
            class="overflow-y-auto h-100 w-100 custom-scrollbar">
         <div v-for="conversation in conversations">
 
+
           <!-- Individual Conversation -->
           <div class="conversation-item btn d-flex align-content-center justify-content-between w-100 rounded-0"
                @click="selectUserForConversation(conversation.friend)">
@@ -209,7 +217,12 @@ function handleEnter(event: KeyboardEvent) {
 
             <div class="d-flex flex-fill flex-column align-items-start">
               <div class="fs-6">
-                {{ conversation.friend.firstName }} {{ conversation.friend.lastName }}
+                <span v-if="messageStore.findNumberOfUnreadMessages(conversation.friend) != 0"
+                      class="text-light border border-1 border-primary rounded-circle bg-primary ps-1 pe-1">
+                  {{ `${messageStore.findNumberOfUnreadMessages(conversation.friend) ?? null}` }}
+                </span>
+                {{ conversation.friend.firstName }}
+                {{ conversation.friend.lastName }}
               </div>
               <div class="d-flex justify-content-start">
                 {{ messageStore.findLastMessageWithUser(conversation.friend) ?? "" }}

@@ -1,1 +1,1 @@
-<h1>Social Media App</h1>
+<h1 style="color: blue">Social Media App</h1>

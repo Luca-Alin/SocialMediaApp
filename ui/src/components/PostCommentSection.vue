@@ -25,6 +25,7 @@ onMounted(() => {
 });
 
 const newComment = ref("");
+const commentSectionId : Ref<string | null> = ref(null);
 
 function addNewComment() {
   commentService.addComment({
@@ -43,18 +44,22 @@ function addNewComment() {
       });
   newComment.value = "";
 }
+
+onMounted(() => {
+  commentSectionId.value = props.postId + "?comment-section";
+});
 </script>
 
 <template>
-  <div class="accordion accordion-flush" id="accordionFlushExample">
+  <div class="accordion accordion-flush" :id="`${commentSectionId!}a`">
     <div class="accordion-item">
       <h2 class="accordion-header">
         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                :data-bs-target="`#${commentSectionId!}b`" aria-expanded="false" :aria-controls="`${commentSectionId!}b`">
           {{ comments?.length ?? 0 }} comments
         </button>
       </h2>
-      <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+      <div :id="`${commentSectionId!}b`" class="accordion-collapse collapse" :data-bs-parent="`#${commentSectionId!}a`">
         <div class="accordion-body">
           <div class="d-flex">
             <input type="text" v-model="newComment">

@@ -10,10 +10,15 @@ import {storeToRefs} from "pinia";
 import FakePost from "../components/FakePost.vue";
 import friendshipService from "../services/friendship-service/FriendshipService";
 import {type FriendshipStatus} from "../services/friendship-service/model/FriendshipStatus";
+import {useUserInfoStore} from "../stores/UserInfoStore";
+
+const userStore = useUserInfoStore();
+const {authenticatedUser} = storeToRefs(userStore);
+
 
 const route = useRoute();
 const userId = route.params["id"];
-const user: Ref<UserDTO | null> = ref(null);
+const userProfileDetails: Ref<UserDTO | null> = ref(null);
 const isLoading = ref(false);
 
 const postsStore = usePostsStore();
@@ -39,25 +44,25 @@ function friendshipAction() {
 }
 
 async function findFriendshipStatus() {
-  friendshipStatus.value = ((await friendshipService.friendshipStatus(user.value!)).data);
+  friendshipStatus.value = ((await friendshipService.friendshipStatus(userProfileDetails.value!)).data);
 }
 
 onMounted(() => {
   isLoading.value = true;
   userService.findUserById(userId as string)
       .then((res) => {
-        user.value = res.data;
+        userProfileDetails.value = res.data;
         findFriendshipStatus();
       })
       .then(_ => {
-        postService.findByUserId(user.value?.uuid!)
+        postService.findByUserId(userProfileDetails.value?.uuid!)
             .then((res) => {
               postsStore.deletePosts();
               postsStore.addPosts(res.data);
             });
       })
       .catch((err) => {
-        user.value = null;
+        userProfileDetails.value = null;
         console.log(err);
       })
       .finally(() => {
@@ -72,7 +77,7 @@ onMounted(() => {
   <div v-if="isLoading">
     Loading screen
   </div>
-  <div v-else-if="user == null">
+  <div v-else-if="userProfileDetails == null">
     User not found
   </div>
   <div v-else class="d-flex flex-column">
@@ -80,22 +85,24 @@ onMounted(() => {
       <!-- Profile Image and Friendship Button -->
       <div class="float-start d-flex flex-column me-2 mb-2">
 
-        <img :src="`data:img/png;base64,${user.profileImage}`" alt="profile image"
+        <img :src="`data:img/png;base64,${userProfileDetails.profileImage}`" alt="profile image"
              class="rounded-circle border border-dark border-5"
              width="200" height="200">
 
-        <button class="btn btn-primary m-2" :disabled="!friendshipStatus" @click="friendshipAction">
-          <span v-if="friendshipStatus">{{ friendshipStatus }}</span>
-          <span v-else class="spinner-border" role="status"></span>
-        </button>
+        <div v-if="authenticatedUser?.uuid !== userProfileDetails?.uuid">
+          <button class="btn btn-primary m-2" :disabled="!friendshipStatus" @click="friendshipAction">
+            <span v-if="friendshipStatus">{{ friendshipStatus }}</span>
+            <span v-else class="spinner-border" role="status"></span>
+          </button>
+        </div>
       </div>
       <!-- Name and Bio -->
       <div>
         <div class="fs-1">
-          {{ user?.firstName }} {{ user?.lastName }}
+          {{ userProfileDetails?.firstName }} {{ userProfileDetails?.lastName }}
         </div>
         <div>
-          {{ user?.bio }}
+          {{ userProfileDetails?.bio }}
         </div>
       </div>
     </div>

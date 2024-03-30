@@ -98,10 +98,10 @@ public class MessageService {
         return userRepository.findByEmail(userDetails.getUsername()).orElseThrow(UserNotFoundException::new);
     }
 
-    public MessageDTO readMessage(Message message) {
-        message.setMessageWasRead(true);
-        Message savedMessage = messageRepository.save(message);
-        return messageDTOMapper.apply(savedMessage);
+    public void readMessage(UserDetails userDetails, User sender) throws UserNotFoundException {
+        User receiver = getUser(userDetails);
+        sender = getUser(sender.getUuid());
+        messageRepository.setMessagesRead(receiver, sender);
     }
 
     public User getUser(String id) throws UserNotFoundException {

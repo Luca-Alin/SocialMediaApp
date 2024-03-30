@@ -1,5 +1,6 @@
 package springboottemplate.data_services.post.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import springboottemplate.data_services.user.model.User;
@@ -10,8 +11,15 @@ import springboottemplate.data_services.user.model.User;
 @NoArgsConstructor
 @Builder
 
-@Embeddable
+@Entity
 public class PostReaction {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @ManyToOne
+    @JsonBackReference
+    private Post post;
 
     @ManyToOne
     private User user;

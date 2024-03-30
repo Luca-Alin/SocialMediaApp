@@ -6,7 +6,7 @@ import {storeToRefs} from "pinia";
 import {ref, type Ref} from "vue";
 
 const userStore = useUserInfoStore();
-const {user} = storeToRefs(userStore);
+const {authenticatedUser} = storeToRefs(userStore);
 
 const chatWindowIsOpen: Ref<boolean> = ref(false);
 </script>
@@ -33,13 +33,13 @@ const chatWindowIsOpen: Ref<boolean> = ref(false);
 
   <!-- Floating Stuff -->
   <!-- Chat -->
-  <ChatComponent v-if="user"
+  <ChatComponent v-if="authenticatedUser"
                  :chat-is-maximised="chatWindowIsOpen"
                  @maximize-request="() => chatWindowIsOpen = !chatWindowIsOpen"
                  :class="chatWindowIsOpen ? 'actual-chat' : 'dsmnone actual-chat'"/>
 
   <!-- chat window button  -->
-  <div v-if="user && !chatWindowIsOpen" id="open-chat-button" class="d-md-none">
+  <div v-if="authenticatedUser && !chatWindowIsOpen" id="open-chat-button" class="d-md-none">
     <button
         type="button"
         class="btn btn-primary rounded-5 pt-2 pb-2"
