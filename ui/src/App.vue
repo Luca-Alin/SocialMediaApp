@@ -88,9 +88,9 @@ main::-webkit-scrollbar-thumb {
   }
 
   .actual-chat {
-    position: fixed;
+    position: absolute;
     left: 0;
-    top: 40px;
+    top: 0;
     width: 100%;
   }
 

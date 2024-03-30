@@ -104,6 +104,12 @@ export const useMessagesStore = defineStore("Messages", {
             if (conversation) {
                 conversation.friendIsTyping = Date.now();
             }
+        },
+        resetUserTyping(userId: string) : void {
+            const conversation = this.conversations.find(cnv => cnv.friend.uuid === userId);
+            if (conversation) {
+                conversation.friendIsTyping = 0;
+            }
         }
     },
     getters: {

@@ -11,7 +11,6 @@ export class ChatService {
     public ws: WebSocket = null!;
     public webSocketIsConnected: Ref<boolean> = ref<boolean>(false);
     public retryingToConnectChat: Ref<number> = ref(0);
-    private interval: NodeJS.Timeout = null!;
     private readonly userInfo;
     private readonly messageStore;
 
@@ -45,7 +44,7 @@ export class ChatService {
 
         const messageRequest: MessageRequest = {
             content: currentMessage,
-            receiverId: selectedUser
+            receiverId: receiverId
         };
 
         const parsedMessage: string = JSON.stringify(messageRequest);
@@ -75,10 +74,13 @@ export class ChatService {
         let parsedMessage: MessageDTO = JSON.parse(message.data);
         if (parsedMessage.content == null) {
             this.messageStore.setUserTyping(parsedMessage.senderId);
+            console.log("message is typed");
             return;
         }
 
-        this.messageStore.addMessage(parsedMessage as MessageDTO);
+        this.messageStore.addMessage(parsedMessage);
+        this.messageStore.resetUserTyping(parsedMessage.senderId);
+        console.log("message received")
     }
 
 }

@@ -20,7 +20,6 @@ const chatService = new ChatService(conversations.value);
 const socketIsConnected = ref(chatService.webSocketIsConnected);
 
 
-
 const selectedUser: Ref<UserDTO> = ref(null!);
 const selectedUserConversation: Ref<Conversation> = ref(null!);
 
@@ -41,7 +40,8 @@ function selectUserForConversation(user: UserDTO) {
 const currentMessage = ref("");
 
 watch(currentMessage, _ => {
-  chatService.sendTypingNotification(selectedUser.value);
+  if (currentMessage.value.trim() != "")
+    chatService.sendTypingNotification(selectedUser.value);
 });
 
 function sendMessage() {
@@ -112,11 +112,11 @@ const tag = ref("");
 const filteredConversations = computed(() => {
   if (tag.value !== "")
     return conversations.value.filter(cnv => {
-      const fullName : string = (cnv.friend.firstName + cnv.friend.lastName).toLowerCase();
-      return fullName.includes(tag.value)
+      const fullName: string = (cnv.friend.firstName + cnv.friend.lastName).toLowerCase();
+      return fullName.includes(tag.value);
     });
   return conversations.value;
-})
+});
 </script>
 
 <template>
@@ -223,7 +223,8 @@ const filteredConversations = computed(() => {
       <div v-else
            class="overflow-y-auto h-100 w-100 custom-scrollbar">
         <div>
-          <input type="text" class="w-100 border-start-0 border-top-0 border-end-0 search-box" v-model="tag" placeholder="search user">
+          <input type="text" class="w-100 border-start-0 border-top-0 border-end-0 search-box" v-model="tag"
+                 placeholder="search user">
         </div>
         <div v-for="conversation in filteredConversations as typeof conversations">
 
