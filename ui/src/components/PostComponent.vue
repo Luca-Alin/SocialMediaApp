@@ -39,7 +39,7 @@ watch(posts, _ => {
   post.value = posts.value.find(p => p?.uuid === props.postId) as PostDTO;
 }, {
   deep: true
-})
+});
 
 function numberOfPostReactionTypes(postRT: PostReactionType) {
   return post.value?.postReactions?.filter(prt => prt.postReactionType == postRT).length;
@@ -50,7 +50,7 @@ function addPostReaction(postReactionType: PostReactionType) {
 
   postService.addPostReaction(post.value, postReactionType)
       .then((res) => post.value!.postReactions = res.data)
-      .catch((err) => console.log(err))
+      .catch((err) => console.error(err))
       .finally();
 }
 
@@ -79,6 +79,7 @@ const resizableContent = computed(() => {
     return post.value?.content.slice(0, maxWordsCount) + "...";
   return post.value?.content;
 });
+
 function toggleContent() {
   showLessContent.value = !showLessContent.value;
 }
@@ -145,25 +146,32 @@ function toggleContent() {
       </div>
     </div>
 
+    <!-- This ensures the post will use a normal width without images -->
+    <div v-if="post.images.length === 0">
+      <img src="" alt="" width="800" height="1" class="d-block w-100">
+    </div>
     <!-- Post Images Carousel -->
     <div :id="bootstrapId!" class="carousel carousel slide">
       <div class="carousel-indicators">
         <button v-for="i in imagesIndex"
-                type="button" :data-bs-target="`#${bootstrapId}`" :data-bs-slide-to="i - 1" class="active"
+                type="button" :data-bs-target="`#${bootstrapId}`" :data-bs-slide-to="i - 1"
+                :class="i == 1 ? 'active' : ''"
                 aria-current="true"
                 :aria-label="`Slide ${i}`">
         </button>
       </div>
       <div class="carousel-inner">
-        <div v-if="post?.images != null && post.images.length > 0" class="carousel-item active"
+        <div v-if="post?.images && post.images.length > 0" class="carousel-item active"
              data-bs-interval="10000">
           <img :src="`data:image/png;base64,${post?.images[0]}`"
-               class="bd-placeholder-img bd-placeholder-img-lg d-block w-100" width="40" height="500" alt="">
+               class="bd-placeholder-img bd-placeholder-img-lg d-block w-100"
+               width="800" height="450" alt="">
         </div>
-        <div v-if="post?.images != null && post!.images!.length > 1" v-for="image in post?.images">
+        <div v-if="post?.images && post!.images!.length > 1" v-for="image in post?.images">
           <div v-if="image != post.images[0]" class="carousel-item" data-bs-interval="2000">
-            <img :src="`data:image/png;base64,${image}`" class="bd-placeholder-img bd-placeholder-img-lg d-block w-100"
-                 width="800" height="400" alt="">
+            <img :src="`data:image/png;base64,${image}`"
+                 class="bd-placeholder-img bd-placeholder-img-lg d-block w-100"
+                 width="800" height="450" alt="">
           </div>
         </div>
       </div>
@@ -205,6 +213,14 @@ function toggleContent() {
   min-width: 400px;
   width: auto;
   max-width: 600px;
+}
+
+.no-image-placeholder {
+  width: 100%; /* Set the width to fill the container */
+  height: 300px; /* Set the desired height for the placeholder */
+  background-color: transparent; /* Set the background color to transparent */
+  border: 1px dashed #ccc; /* Optional: Add a dashed border for visual clarity */
+  box-sizing: border-box; /* Ensure the border is included in the width */
 }
 </style>
 

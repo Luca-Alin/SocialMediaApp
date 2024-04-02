@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {onMounted, ref, type Ref} from "vue";
+import {onMounted, ref, type Ref, watch} from "vue";
 import type {CommentDTO} from "../services/comment-service/model/CommentDTO";
 import {storeToRefs} from "pinia";
 import type {PostDTO} from "../services/post-service/model/PostDTO";
@@ -47,6 +47,13 @@ function addNewComment() {
 
 onMounted(() => {
   commentSectionId.value = props.postId + "?comment-section";
+});
+
+watch(posts, _ => {
+  post.value = posts.value.find(p => p?.uuid === props.postId) as PostDTO;
+  comments.value = post.value?.comments;
+}, {
+  deep: true
 });
 </script>
 

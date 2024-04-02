@@ -1,15 +1,12 @@
 <script setup lang="ts">
-import postService from "../services/post-service/PostService";
-import {onMounted, type Ref, ref, watch} from "vue";
-import PostComponent from "../components/PostComponent.vue";
+import {onMounted, watch} from "vue";
 import router from "../router";
-import FakePost from "../components/FakePost.vue";
 
 import {storeToRefs} from "pinia";
 import {useUserInfoStore} from "../stores/UserInfoStore";
-import {usePostsStore} from "../stores/PostsStore";
 import PostCreationComponent from "../components/PostCreationComponent.vue";
 import PostsDisplay from "../components/PostsDisplay.vue";
+import {usePostsStore} from "@/stores/PostsStore";
 
 const userInfo = useUserInfoStore();
 const {accessToken} = storeToRefs(userInfo);
@@ -25,6 +22,9 @@ onMounted(() => {
       router.push("login");
   });
 });
+
+const postStore = usePostsStore();
+const {posts} = storeToRefs(postStore);
 </script>
 
 <template>
