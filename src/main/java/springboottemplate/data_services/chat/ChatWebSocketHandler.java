@@ -50,11 +50,34 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         if (user.isEmpty()) throw new Exception();
 
         MessageRequest messageRequest = mapper.readValue(message.getPayload(), MessageRequest.class);
+        String senderId = user.get().getUuid();
+        String receiverId = messageRequest.getReceiverId();
+
+        Optional<WebSocketSession> sender = Optional.ofNullable(map.get(user.get().getUuid()));
+        Optional<WebSocketSession> receiver = Optional.ofNullable(map.get(messageRequest.getReceiverId()));
+
+        //send typing notification
+        if (messageRequest.getContent() == null) {
+            MessageDTO messageDTO = MessageDTO
+                    .builder()
+                    .senderId(senderId)
+                    .receiverId(receiverId)
+                    .content(null)
+                    .build();
+            String json = mapper.writeValueAsString(messageDTO);
+            receiver.ifPresent(u -> {
+                try {
+                    u.sendMessage(new TextMessage(json));
+                } catch (IOException e) {
+                }
+            });
+
+            return;
+        }
+
+        //send actual message
         MessageDTO messageDTO = messageService.sendMessage(user.get(), messageRequest);
         String json = mapper.writeValueAsString(messageDTO);
-
-        Optional<WebSocketSession> sender = Optional.ofNullable(map.get(messageDTO.getSenderId()));
-        Optional<WebSocketSession> receiver = Optional.ofNullable(map.get(messageDTO.getReceiverId()));
 
         sender.ifPresent(u -> {
             try {
