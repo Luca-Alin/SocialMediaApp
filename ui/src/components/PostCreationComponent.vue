@@ -127,7 +127,7 @@ onMounted(() => {
 
 const errorsList = ref([]);
 watch(errorsList, _ => {
-  if (errorsList.value != []) {
+  if (errorsList.value.length != 0) {
     while (errorsList.value.length > 2)
       errorsList.value.pop();
 

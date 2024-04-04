@@ -4,6 +4,7 @@ import NavbarComponent from "./components/NavbarComponent.vue";
 import {useUserInfoStore} from "./stores/UserInfoStore";
 import {storeToRefs} from "pinia";
 import {ref, type Ref} from "vue";
+import GroupComponent from "@/components/GroupComponent.vue";
 
 const userStore = useUserInfoStore();
 const {authenticatedUser} = storeToRefs(userStore);
@@ -19,11 +20,17 @@ const chatWindowIsOpen: Ref<boolean> = ref(false);
       <NavbarComponent/>
     </header>
 
-    <main class="d-flex flex-fill justify-content-center overflow-auto w-100 h-100">
+    <main class="d-flex flex-fill overflow-auto w-100 h-100">
+
+      <div v-if="authenticatedUser" class="d-flex flex-column p-2">
+        <GroupComponent/>
+      </div>
 
       <!-- Content - posts, settings, user profiles etc. -->
-      <div style="max-height: 300px; max-width: 768px;">
-        <RouterView class="flex-fill d-flex justify-content-center"/>
+      <div class="d-flex flex-fill justify-content-center">
+        <div style="max-height: 300px; max-width: 768px;">
+          <RouterView class="flex-fill d-flex justify-content-center"/>
+        </div>
       </div>
 
 
