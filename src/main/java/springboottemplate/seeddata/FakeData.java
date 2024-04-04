@@ -49,7 +49,7 @@ public class FakeData {
     private final MessageRepository messageRepository;
     private final ObjectMapper mapper = new ObjectMapper();
 
-    @Bean
+//    @Bean
     public CommandLineRunner commandLineRunner() {
         return _ -> {
             long timer = System.currentTimeMillis();

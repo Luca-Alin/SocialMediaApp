@@ -47,7 +47,7 @@ public class SecurityConfig {
                             @Override
                             protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
                                 try {
-                                    Thread.sleep(400);
+                                    Thread.sleep(0);
                                 } catch (InterruptedException ignored) {
                                 }
                                 filterChain.doFilter(request, response);
