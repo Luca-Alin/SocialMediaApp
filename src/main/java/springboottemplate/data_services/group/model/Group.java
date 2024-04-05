@@ -16,22 +16,37 @@ import java.util.List;
 @Setter
 @Builder
 
-@Entity
+@Entity(name = "Group")
+@Table(name = "groups_table")
 public class Group {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "group_id")
+    private String id;
 
+    @Column(nullable = false)
     private String groupName;
+
+    @Column(nullable = false)
     private String groupDescription;
+
+    @Lob
+    @Column(columnDefinition = "MEDIUMBLOB")
     private byte[] groupImage;
 
+    @Column(nullable = false)
     private WhoCanCreatePosts whoCanCreatePosts;
+
+    @Column(nullable = false)
     private WhoCanSeePosts whoCanSeePosts;
+
+    @Column(nullable = false)
     private HowToJoin howToJoin;
 
-    @OneToMany
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "group_id")
     @JsonManagedReference
     private List<GroupUser> groupUsers;
 
