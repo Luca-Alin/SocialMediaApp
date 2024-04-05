@@ -3,13 +3,19 @@ import ChatComponent from "./components/ChatComponent.vue";
 import NavbarComponent from "./components/NavbarComponent.vue";
 import {useUserInfoStore} from "./stores/UserInfoStore";
 import {storeToRefs} from "pinia";
-import {ref, type Ref} from "vue";
+import {ref, type Ref, watch} from "vue";
 import GroupComponent from "@/components/GroupComponent.vue";
+import router from "@/router";
 
 const userStore = useUserInfoStore();
 const {authenticatedUser} = storeToRefs(userStore);
 
 const chatWindowIsOpen: Ref<boolean> = ref(false);
+
+watch(authenticatedUser, _ => {
+  if (!authenticatedUser)
+    router.push("/login");
+})
 </script>
 
 <template>
