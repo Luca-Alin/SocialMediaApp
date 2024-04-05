@@ -28,7 +28,6 @@ import java.io.IOException;
 public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authenticationProvider;
-    public String springProfile = "development";
     private final String[] AUTH_WHITELIST = {
             "/api/v1/auth/**",
             "/api/v1/*/public/**",
