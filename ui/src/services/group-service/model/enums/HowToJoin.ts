@@ -1,0 +1,4 @@
+export enum HowToJoin {
+    ADMIN_PERMISSION = "ADMIN_PERMISSION",
+    FREE_FOR_ANYONE = "FREE_FOR_ANYONE"
+}

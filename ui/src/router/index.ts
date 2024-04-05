@@ -7,6 +7,7 @@ import SettingsView from "@/views/SettingsView.vue";
 import UserDetailsView from "@/views/UserDetailsView.vue";
 import {useUserInfoStore} from "@/stores/UserInfoStore";
 import CreateGroupView from "@/views/CreateGroupView.vue";
+import GroupDetailsView from "@/views/GroupDetailsView.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -36,6 +37,11 @@ const router = createRouter({
             path: "/create-group",
             name: "CreateGroup",
             component: CreateGroupView
+        },
+        {
+            path: "/group/:id",
+            name: "GroupDetailsView",
+            component: GroupDetailsView
         },
         {
             path: "/",
