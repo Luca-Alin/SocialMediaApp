@@ -37,7 +37,7 @@ function register() {
     return;
   }
 
-  authenticationService.login({email: email.value, password: password.value})
+  authenticationService.register(registerRequest)
       .then((res) => success(res))
       .catch((err) => error(err))
       .finally(() => registerFinally());
