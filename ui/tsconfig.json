@@ -1,16 +1,21 @@
 {
-  "extends": "@tsconfig/strictest/tsconfig.json",
   "include": [
-    "node_modules",
-    "**/*",
-    "**/*.ts"
   ],
   "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    },
+    {
+      "path": "./tsconfig.app.json"
+    }
+  ],
   "compilerOptions": {
-    "module": "ES2022",
+    "module": "ESNext",
+    "verbatimModuleSyntax": true,
     "paths": {
       "@/*": [
-        "src/*"
+        "./src/*"
       ]
     }
   }
