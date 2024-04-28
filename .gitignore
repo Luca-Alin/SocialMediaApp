@@ -73,3 +73,6 @@ ui/typings
 .DS_Store
 Thumbs.db
 
+# H2 database
+/social_media_app_db*
+
