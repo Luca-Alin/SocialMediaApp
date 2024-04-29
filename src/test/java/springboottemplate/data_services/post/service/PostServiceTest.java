@@ -41,7 +41,6 @@ class PostServiceTest {
     private PostDTOMapper postDTOMapper;
     @InjectMocks
     private PostService postService;
-    private AutoCloseable autocloseable;
 
     @BeforeEach
     void setUp() {

@@ -150,7 +150,7 @@ public class UserRepositoryTest {
         );
 
 
-        String query1 = "John Smith";
+        String query1 = "Smith John";
         List<User> search1 = userRepository.searchByQueryString(query1);
         assertThat(search1).contains(johnSmith);
 

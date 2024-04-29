@@ -1,12 +1,11 @@
-package springboottemplate.auth;
+package springboottemplate.config;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class AuthControllerTest {
+import static org.junit.jupiter.api.Assertions.*;
 
+class JwtServiceTest {
 
     @BeforeEach
     void setUp() {
