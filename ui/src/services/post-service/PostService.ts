@@ -1,8 +1,7 @@
-import axios, {AxiosResponse} from "axios";
-import {PostDTO} from "./model/PostDTO";
+import axios, { type AxiosResponse} from "axios";
 import type {PostReactionType} from "src/services/post-service/model/PostReactionType";
-import type {PostReaction} from "../services/post-service/model/PostReaction";
-
+import type {PostDTO} from "@/services/post-service/model/PostDTO";
+``
 class PostService {
     url: string = "/posts";
 
@@ -26,8 +25,8 @@ class PostService {
         });
     }
 
-    public addPostReaction(post: PostDTO, postReactionType: PostReactionType): Promise<AxiosResponse<PostReaction[]>> {
-        return axios.post<PostReaction[]>(
+    public addPostReaction(post: PostDTO, postReactionType: PostReactionType): Promise<AxiosResponse<PostReactionType[]>> {
+        return axios.post<PostReactionType[]>(
             `${this.url}/reaction/${post.uuid}`, `"${postReactionType}"`, {
                 headers: {
                     "Content-Type": "application/json"

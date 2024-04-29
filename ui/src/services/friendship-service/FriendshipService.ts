@@ -1,6 +1,6 @@
-import {UserDTO} from "../user-service/model/UserDTO";
-import axios, {AxiosResponse} from "axios";
 import {FriendshipStatus} from "./model/FriendshipStatus";
+import type {UserDTO} from "@/services/user-service/model/UserDTO";
+import axios, {type AxiosResponse} from "axios";
 
 class FriendshipService {
     url = "/friendships";

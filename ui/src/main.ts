@@ -9,7 +9,7 @@ import router from "./router";
 
 import axios from "axios";
 import authenticationService from "../src/services/authentication-service/AuthenticationService";
-import {useUserInfoStore} from "../src/stores/UserInfoStore";
+import {useUserInfoStore} from "@/stores/UserInfoStore";
 
 axios.defaults.baseURL = import.meta.env.VITE_API_URL;
 axios.interceptors.request.use(
@@ -49,7 +49,7 @@ axios.interceptors.response.use(
         if (error.response.status === 401 && !prevRequest.sent) {
             prevRequest.sent = true;
 
-            const response = await authenticationService.refresh(userStore.refreshToken);
+            const response = await authenticationService.refresh(userStore.refreshToken!);
             userStore.setAccessToken(response.data.accessToken);
             userStore.setRefreshToken(response.data.refreshToken);
             prevRequest.headers["Authorization"] = `Bearer ${userStore.accessToken}`;

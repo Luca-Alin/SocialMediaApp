@@ -8,6 +8,7 @@ import UserDetailsView from "@/views/UserDetailsView.vue";
 import {useUserInfoStore} from "@/stores/UserInfoStore";
 import CreateGroupView from "@/views/CreateGroupView.vue";
 import GroupDetailsView from "@/views/GroupDetailsView.vue";
+import SearchView from "@/views/SearchView.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -42,6 +43,11 @@ const router = createRouter({
             path: "/group/:id",
             name: "GroupDetailsView",
             component: GroupDetailsView
+        },
+        {
+            path: "/search/:id",
+            name: "SearchView",
+            component: SearchView
         },
         {
             path: "/",

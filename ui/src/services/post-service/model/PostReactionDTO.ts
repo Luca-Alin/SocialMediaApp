@@ -1,6 +1,6 @@
-import type {PostReactionType} from "src/services/post-service/model/PostReactionType";
+import type {PostReactionType} from "@/services/post-service/model/PostReactionType";
 
-export class PostReactionDTO {
+export interface PostReactionDTO {
     userId : string;
     postReactionType: PostReactionType;
 }

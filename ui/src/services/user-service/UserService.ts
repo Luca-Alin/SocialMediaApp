@@ -1,5 +1,5 @@
 import axios from "axios";
-import {UserDTO} from "./model/UserDTO";
+import type {UserDTO} from "./model/UserDTO";
 
 class UserService {
     url = "/users";
@@ -14,6 +14,10 @@ class UserService {
 
     public patchUser(userDTO: UserDTO) {
         return axios.put<UserDTO>(`${this.url}/`, userDTO);
+    }
+
+    public searchUsers(query : string) {
+        return axios.get<UserDTO[]>(`${this.url}/search?query=${query}`);
     }
 }
 

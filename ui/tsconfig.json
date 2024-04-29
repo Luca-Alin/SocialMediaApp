@@ -12,6 +12,7 @@
   ],
   "compilerOptions": {
     "module": "ESNext",
+    "target": "ESNext",
     "verbatimModuleSyntax": true,
     "paths": {
       "@/*": [

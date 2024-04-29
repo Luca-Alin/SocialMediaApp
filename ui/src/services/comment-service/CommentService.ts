@@ -1,6 +1,6 @@
 import type {PostDTO} from "src/services/post-service/model/PostDTO";
 import type {CommentDTO} from "src/services/comment-service/model/CommentDTO";
-import axios, {AxiosResponse} from "axios";
+import axios, {type AxiosResponse} from "axios";
 
 class CommentService {
     private url = "/comments";

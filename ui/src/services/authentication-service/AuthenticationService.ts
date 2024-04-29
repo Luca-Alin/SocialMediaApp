@@ -1,6 +1,6 @@
-import {LoginRequest} from "./model/LoginRequest";
-import axios, {AxiosResponse} from "axios";
-import {RegisterRequest} from "./model/RegisterRequest";
+import {type LoginRequest} from "./model/LoginRequest";
+import axios, {type AxiosResponse} from "axios";
+import {type RegisterRequest} from "./model/RegisterRequest";
 import type {AuthenticationResponse} from "src/services/authentication-service/model/AuthenticationResponse";
 
 class AuthenticationService {
@@ -14,11 +14,11 @@ class AuthenticationService {
         return axios.post<AuthenticationResponse>(`${this.url}/register`, registerRequest);
     }
 
-    public random(){
+    public random() {
         return axios.get<AuthenticationResponse>(`${this.url}/random`);
     }
 
-    public refresh(refreshToken: string) : Promise<AxiosResponse<AuthenticationResponse>> {
+    public refresh(refreshToken: string): Promise<AxiosResponse<AuthenticationResponse>> {
         return axios.post<AuthenticationResponse>(`${this.url}/refresh-token`, null, {
             headers: {
                 Authorization: `Bearer ${refreshToken}`

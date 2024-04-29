@@ -1,12 +1,10 @@
-<script setup lang="ts">
-
+<script lang="ts" setup>
 import App from "../App.vue";
 import {createPinia, storeToRefs} from "pinia";
-import {useUserInfoStore} from "../stores/UserInfoStore";
-import {useDeveloperStore} from "../stores/DeveloperStore";
+import {useUserInfoStore} from "@/stores/UserInfoStore";
+import {useDeveloperStore} from "@/stores/DeveloperStore";
 
 import {createApp, onMounted, type Ref, ref, watch} from "vue";
-import chatService from "../services/chat-service/ChatService";
 import developerService from "../services/developer-mode-service/DeveloperService";
 import router from "../router";
 
@@ -21,9 +19,16 @@ const {authenticatedUser, accessToken, refreshToken} = storeToRefs(userInfoStore
 const developerStore = useDeveloperStore();
 const {developerMode} = storeToRefs(developerStore);
 
+const searchQuery = ref("");
+
+function searchUsers() {
+  router.push({name: "SearchView", params: {id: searchQuery.value}});
+}
+
 async function logout() {
   userInfoStore.logoutUser();
-  chatService.disconnect();
+
+  // chatService.disconnect();
 
 
   await router.push("/login");
@@ -60,6 +65,14 @@ watch((developerMode), () => {
     timer = null;
   }
 });
+
+
+window.addEventListener("keydown", function (e) {
+  if (e.keyCode === 75 && e.ctrlKey) {
+    e.preventDefault();
+    document.getElementById("search-bar")?.focus();
+  }
+});
 </script>
 
 <template>
@@ -67,26 +80,29 @@ watch((developerMode), () => {
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">Social Media App</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-              aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
+              class="navbar-toggler"
+              data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse" type="button">
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <div id="navbarSupportedContent" class="collapse navbar-collapse">
 
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
           <li v-if="authenticatedUser" class="nav-item">
-            <router-link to="/posts" class="nav-link active" aria-current="page" href="#">Home</router-link>
+            <router-link aria-current="page" class="nav-link active" href="#" to="/posts">Home</router-link>
           </li>
 
           <li v-if="authenticatedUser" class="nav-item dropdown">
             <!--suppress TypeScriptUnresolvedReference -->
-            <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
-               aria-expanded="false">
+            <a id="navbarDropdown" aria-expanded="false" class="nav-link dropdown-toggle active"
+               data-bs-toggle="dropdown"
+               href="#"
+               role="button">
               {{ authenticatedUser!.firstName }} {{ authenticatedUser!.lastName }}
             </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <ul aria-labelledby="navbarDropdown" class="dropdown-menu">
               <li>
                 <button class="dropdown-item" @click="logout">Logout</button>
               </li>
@@ -98,7 +114,7 @@ watch((developerMode), () => {
 
 
           <li class="nav-item">
-            <button class="nav-link active" aria-current="page" @click="enableDeveloperMode()">
+            <button aria-current="page" class="nav-link active" @click="enableDeveloperMode()">
               <span v-if="developerMode">
                 Disable developer mode
               </span>
@@ -109,7 +125,7 @@ watch((developerMode), () => {
           </li>
 
           <li v-if="developerMode" class="nav-item">
-            <div class="nav-link active d-flex flex-column" aria-current="page">
+            <div aria-current="page" class="nav-link active d-flex flex-column">
               <span>
                 {{ `Access Token: ${accessTokenExpTime}` }}
               </span>
@@ -123,8 +139,10 @@ watch((developerMode), () => {
         </ul>
 
         <div class="d-flex">
-          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-light" type="submit">Search</button>
+          <input id="search-bar" v-model="searchQuery" aria-label="Search"
+                 class="form-control me-2" placeholder="Ctrl+K" type="search"
+                 @keyup.enter.prevent="searchUsers">
+          <button class="btn btn-outline-light" type="submit" @click="searchUsers">Search</button>
         </div>
 
       </div>

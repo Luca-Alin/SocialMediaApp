@@ -1,11 +1,10 @@
 import {defineStore} from "pinia";
-import type {Conversation} from "../services/chat-service/model/Conversation";
-import type {MessageDTO} from "../services/chat-service/model/MessageDTO";
-import {useUserInfoStore} from "../stores/UserInfoStore";
+import type {Conversation} from "@/services/chat-service/model/Conversation";
+import type {MessageDTO} from "@/services/chat-service/model/MessageDTO";
+import {useUserInfoStore} from "@/stores/UserInfoStore";
 import userService from "../services/user-service/UserService";
 import type {UserDTO} from "src/services/user-service/model/UserDTO";
-import {formatDate} from "../services/format-date-service/FormatDateService";
-import {ref} from "vue";
+import {formatDate} from "@/services/format-date-service/FormatDateService";
 
 export const useMessagesStore = defineStore("Messages", {
     state: () => ({
@@ -105,7 +104,7 @@ export const useMessagesStore = defineStore("Messages", {
                 conversation.friendIsTyping = Date.now();
             }
         },
-        resetUserTyping(userId: string) : void {
+        resetUserTyping(userId: string): void {
             const conversation = this.conversations.find(cnv => cnv.friend.uuid === userId);
             if (conversation) {
                 conversation.friendIsTyping = 0;
@@ -113,6 +112,6 @@ export const useMessagesStore = defineStore("Messages", {
         }
     },
     getters: {
-        getNumberOne : (state) => state.count * 2
+        getNumberOne: (state) => state.count * 2
     }
 });

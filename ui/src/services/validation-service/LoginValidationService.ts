@@ -1,5 +1,5 @@
 function validateEmailAndPassword(email : string, password: string) : string | null {
-    const emailRegex : RegExp =  /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;;
+    const emailRegex : RegExp =  /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;;
 
     if (emailRegex.test(email) && password.length > 0) {
         return null;

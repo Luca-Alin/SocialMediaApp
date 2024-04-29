@@ -1,6 +1,6 @@
-import {CommentDTO} from "../../comment-service/model/CommentDTO";
-import {UserDTO} from "../../user-service/model/UserDTO";
 import type {PostReactionDTO} from "src/services/post-service/model/PostReactionDTO";
+import type {UserDTO} from "@/services/user-service/model/UserDTO";
+import type {CommentDTO} from "@/services/comment-service/model/CommentDTO";
 
 export interface PostDTO {
     uuid: string;

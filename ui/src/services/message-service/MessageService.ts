@@ -1,6 +1,6 @@
-import axios, {AxiosResponse} from "axios";
-import type {Conversation} from "../services/chat-service/model/Conversation";
-import type {UserDTO} from "../services/user-service/model/UserDTO";
+import axios, {type AxiosResponse} from "axios";
+import type {Conversation} from "@/services/chat-service/model/Conversation";
+import type {UserDTO} from "@/services/user-service/model/UserDTO";
 
 class MessageService {
     url = "/message";

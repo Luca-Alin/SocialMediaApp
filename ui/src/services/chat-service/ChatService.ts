@@ -55,7 +55,7 @@ export class ChatService {
         if (this.ws == null) throw new Error("Message could not be sent");
         const messageRequest: MessageRequest = {
             content: null!,
-            receiverId: userDTO.uuid
+            receiverId: userDTO.uuid!
         };
         const parsedMessage: string = JSON.stringify(messageRequest);
         this.ws.send(parsedMessage);

@@ -1,4 +1,4 @@
-import {UserDTO} from "../../user-service/model/UserDTO";
+import {type UserDTO} from "../../user-service/model/UserDTO";
 
 export interface CommentDTO {
     id: number | null;

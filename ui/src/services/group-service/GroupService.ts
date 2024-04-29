@@ -1,4 +1,4 @@
-import axios, {AxiosResponse} from "axios";
+import axios, {type AxiosResponse} from "axios";
 import type {Group} from "@/services/group-service/model/Group";
 import type {GroupJoinStatus} from "@/services/group-service/model/enums/GroupJoinStatus";
 

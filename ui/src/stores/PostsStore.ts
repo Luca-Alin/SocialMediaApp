@@ -1,5 +1,5 @@
 import {defineStore} from "pinia";
-import type {PostDTO} from "../services/post-service/model/PostDTO";
+import type {PostDTO} from "@/services/post-service/model/PostDTO";
 
 export const usePostsStore = defineStore("Posts", {
     state: () => ({

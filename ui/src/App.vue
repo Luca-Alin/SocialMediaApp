@@ -19,7 +19,6 @@ watch(authenticatedUser, _ => {
 </script>
 
 <template>
-
   <div id="page-content" class="d-flex flex-column">
 
     <header>

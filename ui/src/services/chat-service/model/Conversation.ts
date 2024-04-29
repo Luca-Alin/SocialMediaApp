@@ -1,5 +1,5 @@
-import {MessageDTO} from "./MessageDTO";
-import {UserDTO} from "../../user-service/model/UserDTO";
+import {type MessageDTO} from "./MessageDTO";
+import {type UserDTO} from "../../user-service/model/UserDTO";
 
 export interface Conversation {
     friend: UserDTO;
