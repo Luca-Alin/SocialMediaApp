@@ -1,7 +1,6 @@
 package springboottemplate.config.security;
 
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +18,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.filter.OncePerRequestFilter;
 import springboottemplate.config.JwtAuthenticationFilter;
-
-import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity
@@ -44,22 +41,21 @@ public class SecurityConfig {
                         .and()
                         .addFilterBefore(new OncePerRequestFilter() {
                             @Override
-                            protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+                            protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain fc) {
                                 try {
-                                    Thread.sleep(0);
-                                } catch (InterruptedException ignored) {
+                                    Thread.sleep(1750);
+                                    fc.doFilter(req, res);
+                                } catch (Exception ignored) {
                                 }
-                                filterChain.doFilter(request, response);
                             }
                         }, BasicAuthenticationFilter.class)
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).authenticationProvider(authenticationProvider).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class).exceptionHandling(configurer -> configurer.authenticationEntryPoint(authenticationEntryPoint()))
-//                .cors(AbstractHttpConfigurer::disable)
                 .build();
     }
 
     private AuthenticationEntryPoint authenticationEntryPoint() {
-        return (request, response, authException) -> {
+        return (_, response, authException) -> {
             String sb = "Error: " + "\n" +
                         "Cause: " + authException.getCause() + "\n" +
                         "Message: " + authException.getMessage() + "\n";
