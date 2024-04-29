@@ -11,10 +11,10 @@ import java.util.List;
 
 @Configuration
 public class CorsConfig {
-    private final List<String> allowedOrigins = List.of("http://localhost:5173", "https://thankful-wave-00a4d2303.4.azurestaticapps.net/");
-    private final List<String> allowedHeaders = Arrays.asList("Origin", "Access-Control-Allow-Origin", "Content-Type", "Accept", "Authorization", "Origin, Accept", "X-Requested-With", "Access-Control-Request-Method", "Access-Control-Request-Headers");
-    private final List<String> exposedHeaders = Arrays.asList("Origin", "Content-Type", "Accept", "Authorization", "Access-Control-Allow-Origin", "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials");
-    private final List<String> allowedMethods = Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH");
+    private final List<String> allowedOrigins = List.of("*");
+    private final List<String> allowedHeaders = List.of("Origin", "Access-Control-Allow-Origin", "Content-Type", "Accept", "Authorization", "Origin, Accept", "X-Requested-With", "Access-Control-Request-Method", "Access-Control-Request-Headers");
+    private final List<String> exposedHeaders = List.of("Origin", "Content-Type", "Accept", "Authorization", "Access-Control-Allow-Origin", "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials");
+    private final List<String> allowedMethods = List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH");
 
     @Bean
     public CorsFilter corsFilter() {
