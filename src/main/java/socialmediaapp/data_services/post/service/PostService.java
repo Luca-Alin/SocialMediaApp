@@ -1,22 +1,22 @@
-package springboottemplate.data_services.post.service;
+package socialmediaapp.data_services.post.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import springboottemplate.data_services.exception.EntityDoesNotExistException;
-import springboottemplate.data_services.exception.EntityShouldContainAnId;
-import springboottemplate.data_services.exception.EntityShouldNotContainAnId;
-import springboottemplate.data_services.exception.UserDoesNotOwnEntityException;
-import springboottemplate.data_services.post.exception.InvalidPostException;
-import springboottemplate.data_services.post.model.Post;
-import springboottemplate.data_services.post.model.PostDTO;
-import springboottemplate.data_services.post.model.PostReaction;
-import springboottemplate.data_services.post.model.PostReactionType;
-import springboottemplate.data_services.post.repository.PostRepository;
-import springboottemplate.data_services.user.exceptions.UserNotFoundException;
-import springboottemplate.data_services.user.model.User;
-import springboottemplate.data_services.user.repository.UserRepository;
+import socialmediaapp.data_services.exception.EntityDoesNotExistException;
+import socialmediaapp.data_services.exception.EntityShouldContainAnId;
+import socialmediaapp.data_services.exception.EntityShouldNotContainAnId;
+import socialmediaapp.data_services.exception.UserDoesNotOwnEntityException;
+import socialmediaapp.data_services.post.exception.InvalidPostException;
+import socialmediaapp.data_services.post.model.Post;
+import socialmediaapp.data_services.post.model.PostDTO;
+import socialmediaapp.data_services.post.model.PostReaction;
+import socialmediaapp.data_services.post.model.PostReactionType;
+import socialmediaapp.data_services.post.repository.PostRepository;
+import socialmediaapp.data_services.user.exceptions.UserNotFoundException;
+import socialmediaapp.data_services.user.model.User;
+import socialmediaapp.data_services.user.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;

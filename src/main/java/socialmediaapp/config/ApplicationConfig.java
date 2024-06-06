@@ -1,7 +1,7 @@
-package springboottemplate.config;
+package socialmediaapp.config;
 
 import lombok.RequiredArgsConstructor;
-import springboottemplate.data_services.user.repository.UserRepository;
+import socialmediaapp.data_services.user.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

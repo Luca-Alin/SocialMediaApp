@@ -1,9 +1,9 @@
-package springboottemplate.data_services.post.service;
+package socialmediaapp.data_services.post.service;
 
 
 import org.springframework.stereotype.Service;
-import springboottemplate.data_services.post.model.PostReaction;
-import springboottemplate.data_services.post.model.PostReactionDTO;
+import socialmediaapp.data_services.post.model.PostReaction;
+import socialmediaapp.data_services.post.model.PostReactionDTO;
 
 import java.util.function.Function;
 

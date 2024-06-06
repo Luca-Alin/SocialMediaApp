@@ -1,11 +1,11 @@
-package springboottemplate.data_services.group.model;
+package socialmediaapp.data_services.group.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
-import springboottemplate.data_services.group.model.enums.HowToJoin;
-import springboottemplate.data_services.group.model.enums.WhoCanCreatePosts;
-import springboottemplate.data_services.group.model.enums.WhoCanSeePosts;
+import socialmediaapp.data_services.group.model.enums.HowToJoin;
+import socialmediaapp.data_services.group.model.enums.WhoCanCreatePosts;
+import socialmediaapp.data_services.group.model.enums.WhoCanSeePosts;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package springboottemplate.data_services.user.model;
+package socialmediaapp.data_services.user.model;
 
 import lombok.*;
 

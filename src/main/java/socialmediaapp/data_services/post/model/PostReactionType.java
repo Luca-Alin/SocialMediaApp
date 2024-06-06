@@ -1,4 +1,4 @@
-package springboottemplate.data_services.post.model;
+package socialmediaapp.data_services.post.model;
 
 public enum PostReactionType {
     LIKE("👍️"),

@@ -1,4 +1,4 @@
-package springboottemplate.data_services.post.controller;
+package socialmediaapp.data_services.post.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,15 +8,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import springboottemplate.data_services.exception.EntityDoesNotExistException;
-import springboottemplate.data_services.exception.EntityShouldContainAnId;
-import springboottemplate.data_services.exception.UserDoesNotOwnEntityException;
-import springboottemplate.data_services.post.model.Post;
-import springboottemplate.data_services.post.model.PostDTO;
-import springboottemplate.data_services.post.model.PostReaction;
-import springboottemplate.data_services.post.model.PostReactionType;
-import springboottemplate.data_services.post.service.PostService;
-import springboottemplate.data_services.user.exceptions.UserNotFoundException;
+import socialmediaapp.data_services.exception.EntityDoesNotExistException;
+import socialmediaapp.data_services.exception.EntityShouldContainAnId;
+import socialmediaapp.data_services.exception.UserDoesNotOwnEntityException;
+import socialmediaapp.data_services.post.model.Post;
+import socialmediaapp.data_services.post.model.PostDTO;
+import socialmediaapp.data_services.post.model.PostReaction;
+import socialmediaapp.data_services.post.model.PostReactionType;
+import socialmediaapp.data_services.post.service.PostService;
+import socialmediaapp.data_services.user.exceptions.UserNotFoundException;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
-package springboottemplate.data_services.exception;
+package socialmediaapp.data_services.exception;
 
-import springboottemplate.data_services.user.model.User;
+import socialmediaapp.data_services.user.model.User;
 
 import java.util.Arrays;
 

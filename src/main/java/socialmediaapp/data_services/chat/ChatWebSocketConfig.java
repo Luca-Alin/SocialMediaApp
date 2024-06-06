@@ -1,4 +1,4 @@
-package springboottemplate.data_services.chat;
+package socialmediaapp.data_services.chat;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;

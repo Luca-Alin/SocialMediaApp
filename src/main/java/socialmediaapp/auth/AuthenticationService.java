@@ -1,4 +1,4 @@
-package springboottemplate.auth;
+package socialmediaapp.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,14 +11,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import springboottemplate.auth.models.AuthenticationResponse;
-import springboottemplate.auth.models.LoginRequest;
-import springboottemplate.auth.models.RegisterRequest;
-import springboottemplate.config.JwtService;
-import springboottemplate.data_services.user.model.User;
-import springboottemplate.data_services.user.model.UserProfile;
-import springboottemplate.data_services.user.enums.Role;
-import springboottemplate.data_services.user.repository.UserRepository;
+import socialmediaapp.auth.models.AuthenticationResponse;
+import socialmediaapp.auth.models.LoginRequest;
+import socialmediaapp.auth.models.RegisterRequest;
+import socialmediaapp.config.JwtService;
+import socialmediaapp.data_services.user.model.User;
+import socialmediaapp.data_services.user.model.UserProfile;
+import socialmediaapp.data_services.user.enums.Role;
+import socialmediaapp.data_services.user.repository.UserRepository;
 
 import java.io.IOException;
 

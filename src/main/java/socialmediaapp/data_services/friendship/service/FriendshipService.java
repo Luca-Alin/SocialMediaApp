@@ -1,16 +1,16 @@
-package springboottemplate.data_services.friendship.service;
+package socialmediaapp.data_services.friendship.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import springboottemplate.data_services.exception.EntityDoesNotExistException;
-import springboottemplate.data_services.friendship.exception.FriendshipAlreadyExists;
-import springboottemplate.data_services.friendship.model.Friendship;
-import springboottemplate.data_services.friendship.model.FriendshipStatus;
-import springboottemplate.data_services.friendship.repository.FriendshipRepository;
-import springboottemplate.data_services.user.model.User;
-import springboottemplate.data_services.user.exceptions.UserNotFoundException;
-import springboottemplate.data_services.user.repository.UserRepository;
+import socialmediaapp.data_services.exception.EntityDoesNotExistException;
+import socialmediaapp.data_services.friendship.exception.FriendshipAlreadyExists;
+import socialmediaapp.data_services.friendship.model.Friendship;
+import socialmediaapp.data_services.friendship.model.FriendshipStatus;
+import socialmediaapp.data_services.friendship.repository.FriendshipRepository;
+import socialmediaapp.data_services.user.model.User;
+import socialmediaapp.data_services.user.exceptions.UserNotFoundException;
+import socialmediaapp.data_services.user.repository.UserRepository;
 
 @RequiredArgsConstructor
 

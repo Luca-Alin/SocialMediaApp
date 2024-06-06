@@ -1,4 +1,4 @@
-package springboottemplate.data_services.group.controller;
+package socialmediaapp.data_services.group.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -6,14 +6,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import springboottemplate.data_services.exception.EntityDoesNotExistException;
-import springboottemplate.data_services.group.model.Group;
-import springboottemplate.data_services.group.model.enums.GroupJoinStatus;
-import springboottemplate.data_services.group.model.enums.HowToJoin;
-import springboottemplate.data_services.group.model.enums.WhoCanCreatePosts;
-import springboottemplate.data_services.group.model.enums.WhoCanSeePosts;
-import springboottemplate.data_services.group.service.GroupService;
-import springboottemplate.data_services.post.model.PostDTO;
+import socialmediaapp.data_services.exception.EntityDoesNotExistException;
+import socialmediaapp.data_services.group.model.Group;
+import socialmediaapp.data_services.group.model.enums.GroupJoinStatus;
+import socialmediaapp.data_services.group.model.enums.HowToJoin;
+import socialmediaapp.data_services.group.model.enums.WhoCanCreatePosts;
+import socialmediaapp.data_services.group.model.enums.WhoCanSeePosts;
+import socialmediaapp.data_services.group.service.GroupService;
+import socialmediaapp.data_services.post.model.PostDTO;
 
 import java.util.List;
 

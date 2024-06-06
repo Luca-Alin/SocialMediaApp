@@ -1,4 +1,4 @@
-package springboottemplate.auth.models;
+package socialmediaapp.auth.models;
 
 
 import lombok.Builder;

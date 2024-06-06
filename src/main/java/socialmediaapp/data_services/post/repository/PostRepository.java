@@ -1,11 +1,11 @@
-package springboottemplate.data_services.post.repository;
+package socialmediaapp.data_services.post.repository;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import springboottemplate.data_services.post.model.Post;
-import springboottemplate.data_services.user.model.User;
+import socialmediaapp.data_services.post.model.Post;
+import socialmediaapp.data_services.user.model.User;
 
 import java.util.List;
 

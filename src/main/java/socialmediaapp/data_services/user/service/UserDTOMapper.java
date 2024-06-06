@@ -1,9 +1,9 @@
-package springboottemplate.data_services.user.service;
+package socialmediaapp.data_services.user.service;
 
 import org.springframework.stereotype.Service;
-import springboottemplate.data_services.user.model.User;
-import springboottemplate.data_services.user.model.UserDTO;
-import springboottemplate.data_services.user.model.UserProfile;
+import socialmediaapp.data_services.user.model.User;
+import socialmediaapp.data_services.user.model.UserDTO;
+import socialmediaapp.data_services.user.model.UserProfile;
 
 import java.util.Base64;
 import java.util.function.Function;

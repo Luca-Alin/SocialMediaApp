@@ -1,4 +1,4 @@
-package springboottemplate.auth;
+package socialmediaapp.auth;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -8,11 +8,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
-import springboottemplate.auth.models.AuthenticationResponse;
-import springboottemplate.auth.models.LoginRequest;
-import springboottemplate.auth.models.RegisterRequest;
-import springboottemplate.data_services.user.model.User;
-import springboottemplate.data_services.user.repository.UserRepository;
+import socialmediaapp.auth.models.AuthenticationResponse;
+import socialmediaapp.auth.models.LoginRequest;
+import socialmediaapp.auth.models.RegisterRequest;
+import socialmediaapp.data_services.user.model.User;
+import socialmediaapp.data_services.user.repository.UserRepository;
 
 import java.io.IOException;
 import java.util.List;

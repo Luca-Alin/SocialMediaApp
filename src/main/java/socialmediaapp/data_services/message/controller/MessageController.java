@@ -1,4 +1,4 @@
-package springboottemplate.data_services.message.controller;
+package socialmediaapp.data_services.message.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -7,12 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import springboottemplate.data_services.exception.UserNotFoundException;
-import springboottemplate.data_services.message.model.Conversation;
-import springboottemplate.data_services.message.model.Message;
-import springboottemplate.data_services.message.service.MessageService;
-import springboottemplate.data_services.user.model.User;
-import springboottemplate.data_services.user.model.UserDTO;
+import socialmediaapp.data_services.exception.UserNotFoundException;
+import socialmediaapp.data_services.message.model.Conversation;
+import socialmediaapp.data_services.message.service.MessageService;
+import socialmediaapp.data_services.user.model.User;
 
 import java.util.List;
 

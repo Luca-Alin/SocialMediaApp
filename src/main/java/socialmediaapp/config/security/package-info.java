@@ -1,4 +1,4 @@
 @NonNullApi
-package springboottemplate.config.security;
+package socialmediaapp.config.security;
 
 import org.springframework.lang.NonNullApi;

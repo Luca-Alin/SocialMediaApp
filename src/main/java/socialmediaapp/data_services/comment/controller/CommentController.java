@@ -1,4 +1,4 @@
-package springboottemplate.data_services.comment.controller;
+package socialmediaapp.data_services.comment.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -6,10 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import springboottemplate.data_services.comment.model.Comment;
-import springboottemplate.data_services.comment.model.CommentDTO;
-import springboottemplate.data_services.comment.service.CommentService;
-import springboottemplate.data_services.post.model.Post;
+import socialmediaapp.data_services.comment.model.Comment;
+import socialmediaapp.data_services.comment.model.CommentDTO;
+import socialmediaapp.data_services.comment.service.CommentService;
+import socialmediaapp.data_services.post.model.Post;
 
 import java.util.List;
 

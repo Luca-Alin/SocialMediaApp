@@ -1,13 +1,12 @@
-package springboottemplate.data_services.post.service;
+package socialmediaapp.data_services.post.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import springboottemplate.data_services.comment.service.CommentDTOMapper;
-import springboottemplate.data_services.post.model.Post;
-import springboottemplate.data_services.post.model.PostImage;
-import springboottemplate.data_services.post.model.PostDTO;
-import springboottemplate.data_services.post.model.PostReaction;
-import springboottemplate.data_services.user.service.UserDTOMapper;
+import socialmediaapp.data_services.comment.service.CommentDTOMapper;
+import socialmediaapp.data_services.post.model.Post;
+import socialmediaapp.data_services.post.model.PostImage;
+import socialmediaapp.data_services.post.model.PostDTO;
+import socialmediaapp.data_services.user.service.UserDTOMapper;
 
 import java.util.ArrayList;
 import java.util.function.Function;

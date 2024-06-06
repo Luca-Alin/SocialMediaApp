@@ -1,16 +1,16 @@
-package springboottemplate.data_services.group.service;
+package socialmediaapp.data_services.group.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import springboottemplate.data_services.exception.EntityDoesNotExistException;
-import springboottemplate.data_services.group.model.Group;
-import springboottemplate.data_services.group.model.GroupUser;
-import springboottemplate.data_services.group.model.enums.*;
-import springboottemplate.data_services.group.repository.GroupRepository;
-import springboottemplate.data_services.user.model.User;
-import springboottemplate.data_services.user.repository.UserRepository;
+import socialmediaapp.data_services.exception.EntityDoesNotExistException;
+import socialmediaapp.data_services.group.model.Group;
+import socialmediaapp.data_services.group.model.GroupUser;
+import socialmediaapp.data_services.group.model.enums.*;
+import socialmediaapp.data_services.group.repository.GroupRepository;
+import socialmediaapp.data_services.user.model.User;
+import socialmediaapp.data_services.user.repository.UserRepository;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

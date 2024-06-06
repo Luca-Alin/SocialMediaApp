@@ -1,4 +1,4 @@
-package springboottemplate.data_services.user.controller;
+package socialmediaapp.data_services.user.controller;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
@@ -7,10 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import springboottemplate.data_services.user.exceptions.UserNotFoundException;
-import springboottemplate.data_services.user.model.UserDTO;
-import springboottemplate.data_services.user.service.InvalidSearchQueryException;
-import springboottemplate.data_services.user.service.UserService;
+import socialmediaapp.data_services.user.exceptions.UserNotFoundException;
+import socialmediaapp.data_services.user.model.UserDTO;
+import socialmediaapp.data_services.user.service.InvalidSearchQueryException;
+import socialmediaapp.data_services.user.service.UserService;
 
 import java.util.List;
 

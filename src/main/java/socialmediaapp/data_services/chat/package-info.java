@@ -1,4 +1,4 @@
 @NonNullApi
-package springboottemplate.data_services.chat;
+package socialmediaapp.data_services.chat;
 
 import org.springframework.lang.NonNullApi;

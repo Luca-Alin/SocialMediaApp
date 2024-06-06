@@ -1,4 +1,4 @@
-package springboottemplate.data_services.friendship.exception;
+package socialmediaapp.data_services.friendship.exception;
 
 public class FriendshipAlreadyExists extends Exception{
     public FriendshipAlreadyExists() {

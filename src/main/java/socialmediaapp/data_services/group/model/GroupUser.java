@@ -1,11 +1,11 @@
-package springboottemplate.data_services.group.model;
+package socialmediaapp.data_services.group.model;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
-import springboottemplate.data_services.group.model.enums.GroupRank;
-import springboottemplate.data_services.user.model.User;
+import socialmediaapp.data_services.group.model.enums.GroupRank;
+import socialmediaapp.data_services.user.model.User;
 
 @AllArgsConstructor
 @NoArgsConstructor

@@ -1,4 +1,4 @@
-package springboottemplate.data_services.user.service;
+package socialmediaapp.data_services.user.service;
 
 public class InvalidSearchQueryException extends Throwable {
 

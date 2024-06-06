@@ -1,4 +1,4 @@
-package springboottemplate.data_services.message;
+package socialmediaapp.data_services.message;
 
 public class UserAreNotFriendsException extends Exception {
     public UserAreNotFriendsException() {

@@ -1,4 +1,4 @@
-package springboottemplate.data_services.exception;
+package socialmediaapp.data_services.exception;
 
 public class InvalidEmailException extends Exception{
     public InvalidEmailException(String email) {

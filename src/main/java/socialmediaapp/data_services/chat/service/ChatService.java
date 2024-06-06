@@ -1,13 +1,12 @@
-package springboottemplate.data_services.chat.service;
+package socialmediaapp.data_services.chat.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.springframework.web.util.UriTemplate;
-import springboottemplate.config.JwtService;
-import springboottemplate.data_services.user.model.User;
-import springboottemplate.data_services.user.repository.UserRepository;
+import socialmediaapp.config.JwtService;
+import socialmediaapp.data_services.user.model.User;
+import socialmediaapp.data_services.user.repository.UserRepository;
 
 import java.net.URI;
 import java.util.Optional;

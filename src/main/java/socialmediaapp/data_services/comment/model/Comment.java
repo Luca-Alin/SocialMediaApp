@@ -1,12 +1,11 @@
-package springboottemplate.data_services.comment.model;
+package socialmediaapp.data_services.comment.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
-import springboottemplate.data_services.post.model.Post;
-import springboottemplate.data_services.user.model.User;
+import socialmediaapp.data_services.post.model.Post;
+import socialmediaapp.data_services.user.model.User;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter

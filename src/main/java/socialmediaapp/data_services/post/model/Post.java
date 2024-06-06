@@ -1,13 +1,11 @@
-package springboottemplate.data_services.post.model;
+package socialmediaapp.data_services.post.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Fetch;
-import springboottemplate.data_services.comment.model.Comment;
-import springboottemplate.data_services.user.model.User;
+import socialmediaapp.data_services.comment.model.Comment;
+import socialmediaapp.data_services.user.model.User;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

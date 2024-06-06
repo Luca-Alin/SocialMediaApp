@@ -1,27 +1,23 @@
-package springboottemplate.data_services.chat;
+package socialmediaapp.data_services.chat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
-import springboottemplate.data_services.chat.service.ChatService;
-import springboottemplate.data_services.message.model.MessageDTO;
-import springboottemplate.data_services.message.model.MessageRequest;
-import springboottemplate.data_services.message.service.MessageService;
-import springboottemplate.data_services.user.model.User;
+import socialmediaapp.data_services.chat.service.ChatService;
+import socialmediaapp.data_services.message.model.MessageDTO;
+import socialmediaapp.data_services.message.model.MessageRequest;
+import socialmediaapp.data_services.message.service.MessageService;
+import socialmediaapp.data_services.user.model.User;
 
-import java.io.IOException;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @RequiredArgsConstructor

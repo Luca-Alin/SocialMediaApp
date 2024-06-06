@@ -1,15 +1,15 @@
-package springboottemplate.data_services.comment.service;
+package socialmediaapp.data_services.comment.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import springboottemplate.data_services.comment.model.Comment;
-import springboottemplate.data_services.comment.model.CommentDTO;
-import springboottemplate.data_services.comment.repository.CommentRepository;
-import springboottemplate.data_services.post.model.Post;
-import springboottemplate.data_services.post.repository.PostRepository;
-import springboottemplate.data_services.user.model.User;
-import springboottemplate.data_services.user.repository.UserRepository;
+import socialmediaapp.data_services.comment.model.Comment;
+import socialmediaapp.data_services.comment.model.CommentDTO;
+import socialmediaapp.data_services.comment.repository.CommentRepository;
+import socialmediaapp.data_services.post.model.Post;
+import socialmediaapp.data_services.post.repository.PostRepository;
+import socialmediaapp.data_services.user.model.User;
+import socialmediaapp.data_services.user.repository.UserRepository;
 
 import java.util.List;
 

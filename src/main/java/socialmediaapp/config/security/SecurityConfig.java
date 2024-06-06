@@ -1,4 +1,4 @@
-package springboottemplate.config.security;
+package socialmediaapp.config.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,7 +17,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.filter.OncePerRequestFilter;
-import springboottemplate.config.JwtAuthenticationFilter;
+import socialmediaapp.config.JwtAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity

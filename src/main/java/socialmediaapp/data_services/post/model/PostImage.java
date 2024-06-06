@@ -1,4 +1,4 @@
-package springboottemplate.data_services.post.model;
+package socialmediaapp.data_services.post.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;

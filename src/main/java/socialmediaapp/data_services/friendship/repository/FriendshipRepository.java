@@ -1,12 +1,12 @@
-package springboottemplate.data_services.friendship.repository;
+package socialmediaapp.data_services.friendship.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import springboottemplate.data_services.friendship.model.Friendship;
-import springboottemplate.data_services.friendship.model.FriendshipStatus;
-import springboottemplate.data_services.user.model.User;
+import socialmediaapp.data_services.friendship.model.Friendship;
+import socialmediaapp.data_services.friendship.model.FriendshipStatus;
+import socialmediaapp.data_services.user.model.User;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,4 +1,4 @@
-package springboottemplate.data_services.user.exceptions;
+package socialmediaapp.data_services.user.exceptions;
 
 public class UserNotFoundException extends Exception {
 

@@ -1,9 +1,9 @@
-package springboottemplate.data_services.message.model;
+package socialmediaapp.data_services.message.model;
 
 
 import jakarta.persistence.*;
 import lombok.*;
-import springboottemplate.data_services.user.model.User;
+import socialmediaapp.data_services.user.model.User;
 
 import java.util.Date;
 

@@ -1,15 +1,15 @@
-package springboottemplate.data_services.user.service;
+package socialmediaapp.data_services.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import springboottemplate.data_services.exception.EntityShouldContainAnId;
-import springboottemplate.data_services.exception.UserDoesNotOwnEntityException;
-import springboottemplate.data_services.friendship.repository.FriendshipRepository;
-import springboottemplate.data_services.user.model.User;
-import springboottemplate.data_services.user.model.UserDTO;
-import springboottemplate.data_services.user.exceptions.UserNotFoundException;
-import springboottemplate.data_services.user.repository.UserRepository;
+import socialmediaapp.data_services.exception.EntityShouldContainAnId;
+import socialmediaapp.data_services.exception.UserDoesNotOwnEntityException;
+import socialmediaapp.data_services.friendship.repository.FriendshipRepository;
+import socialmediaapp.data_services.user.model.User;
+import socialmediaapp.data_services.user.model.UserDTO;
+import socialmediaapp.data_services.user.exceptions.UserNotFoundException;
+import socialmediaapp.data_services.user.repository.UserRepository;
 
 import java.util.*;
 

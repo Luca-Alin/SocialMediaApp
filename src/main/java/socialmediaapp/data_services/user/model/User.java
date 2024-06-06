@@ -1,12 +1,12 @@
-package springboottemplate.data_services.user.model;
+package socialmediaapp.data_services.user.model;
 
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import springboottemplate.data_services.friendship.model.Friendship;
-import springboottemplate.data_services.user.enums.Role;
+import socialmediaapp.data_services.friendship.model.Friendship;
+import socialmediaapp.data_services.user.enums.Role;
 
 import java.util.Collection;
 import java.util.List;

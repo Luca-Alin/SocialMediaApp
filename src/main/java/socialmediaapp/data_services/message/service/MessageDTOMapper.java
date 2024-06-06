@@ -1,9 +1,9 @@
-package springboottemplate.data_services.message.service;
+package socialmediaapp.data_services.message.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import springboottemplate.data_services.message.model.Message;
-import springboottemplate.data_services.message.model.MessageDTO;
+import socialmediaapp.data_services.message.model.Message;
+import socialmediaapp.data_services.message.model.MessageDTO;
 
 import java.util.function.Function;
 

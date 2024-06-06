@@ -1,4 +1,4 @@
-package springboottemplate.data_services.friendship.model;
+package socialmediaapp.data_services.friendship.model;
 
 
 public enum FriendshipStatus {

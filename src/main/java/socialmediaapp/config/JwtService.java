@@ -1,4 +1,4 @@
-package springboottemplate.config;
+package socialmediaapp.config;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;

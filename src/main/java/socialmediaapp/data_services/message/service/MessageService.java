@@ -1,20 +1,20 @@
-package springboottemplate.data_services.message.service;
+package socialmediaapp.data_services.message.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import springboottemplate.data_services.exception.UserNotFoundException;
-import springboottemplate.data_services.friendship.repository.FriendshipRepository;
-import springboottemplate.data_services.message.UserAreNotFriendsException;
-import springboottemplate.data_services.message.model.Conversation;
-import springboottemplate.data_services.message.model.Message;
-import springboottemplate.data_services.message.model.MessageDTO;
-import springboottemplate.data_services.message.model.MessageRequest;
-import springboottemplate.data_services.message.repository.MessageRepository;
-import springboottemplate.data_services.user.model.User;
-import springboottemplate.data_services.user.model.UserDTO;
-import springboottemplate.data_services.user.repository.UserRepository;
-import springboottemplate.data_services.user.service.UserDTOMapper;
+import socialmediaapp.data_services.exception.UserNotFoundException;
+import socialmediaapp.data_services.friendship.repository.FriendshipRepository;
+import socialmediaapp.data_services.message.UserAreNotFriendsException;
+import socialmediaapp.data_services.message.model.Conversation;
+import socialmediaapp.data_services.message.model.Message;
+import socialmediaapp.data_services.message.model.MessageDTO;
+import socialmediaapp.data_services.message.model.MessageRequest;
+import socialmediaapp.data_services.message.repository.MessageRepository;
+import socialmediaapp.data_services.user.model.User;
+import socialmediaapp.data_services.user.model.UserDTO;
+import socialmediaapp.data_services.user.repository.UserRepository;
+import socialmediaapp.data_services.user.service.UserDTOMapper;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -77,6 +77,21 @@ public class MessageService {
                 .toList();
     }
 
+    public MessageDTO sendMessage(String senderId, MessageRequest messageRequest) throws UserNotFoundException, UserAreNotFriendsException {
+        User sender = getUser(senderId);
+        User receiver = getUser(messageRequest.getReceiverId());
+
+        Message savedMessage = messageRepository.save(
+                Message.builder()
+                        .sender(sender)
+                        .receiver(receiver)
+                        .content(messageRequest.getContent())
+                        .dateSent(new Date())
+                        .build()
+        );
+
+        return messageDTOMapper.apply(savedMessage);
+    }
 
     public MessageDTO sendMessage(UserDetails userDetails, MessageRequest messageRequest) throws UserNotFoundException, UserAreNotFriendsException {
         User sender = getUser(userDetails);

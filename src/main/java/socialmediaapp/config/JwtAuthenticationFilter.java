@@ -1,4 +1,4 @@
-package springboottemplate.config;
+package socialmediaapp.config;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

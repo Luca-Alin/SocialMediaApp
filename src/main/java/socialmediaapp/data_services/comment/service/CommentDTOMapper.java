@@ -1,10 +1,10 @@
-package springboottemplate.data_services.comment.service;
+package socialmediaapp.data_services.comment.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import springboottemplate.data_services.comment.model.Comment;
-import springboottemplate.data_services.comment.model.CommentDTO;
-import springboottemplate.data_services.user.service.UserDTOMapper;
+import socialmediaapp.data_services.comment.model.Comment;
+import socialmediaapp.data_services.comment.model.CommentDTO;
+import socialmediaapp.data_services.user.service.UserDTOMapper;
 
 import java.util.function.Function;
 

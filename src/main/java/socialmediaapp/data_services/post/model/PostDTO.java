@@ -1,10 +1,9 @@
-package springboottemplate.data_services.post.model;
+package socialmediaapp.data_services.post.model;
 
 import lombok.*;
-import springboottemplate.data_services.comment.model.CommentDTO;
-import springboottemplate.data_services.user.model.UserDTO;
+import socialmediaapp.data_services.comment.model.CommentDTO;
+import socialmediaapp.data_services.user.model.UserDTO;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
