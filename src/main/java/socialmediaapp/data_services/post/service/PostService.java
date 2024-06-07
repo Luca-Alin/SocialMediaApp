@@ -91,7 +91,7 @@ public class PostService {
         post.setUser(user);
         post.setComments(new ArrayList<>());
         post.setPostReactions(new ArrayList<>());
-        Post savedPost = postRepository.save(post);
+        Post savedPost = postRepository.saveAndFlush(post);
 
         return postDTOMapper.apply(savedPost);
     }

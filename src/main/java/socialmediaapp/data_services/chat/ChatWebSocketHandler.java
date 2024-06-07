@@ -47,6 +47,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         sessions.put(session, userId);
     }
 
+    @SuppressWarnings("resource")
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         String userId = sessions.remove(session);
