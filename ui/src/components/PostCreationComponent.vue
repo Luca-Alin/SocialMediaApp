@@ -31,7 +31,6 @@ function createPost() {
       .then(res => {
         postsStore.addPost(res.data);
 
-        console.log(res.data.images.length);
 
         images.value = [];
         postContent.value = "";

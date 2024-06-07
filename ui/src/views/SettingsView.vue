@@ -3,9 +3,11 @@ import userService from "../services/user-service/UserService";
 import {onMounted, type Ref, ref} from "vue";
 import type {UserDTO} from "../services/user-service/model/UserDTO";
 import router from "../router";
-import postService from "../services/post-service/PostService";
 import {storeToRefs} from "pinia";
 import {useUserInfoStore} from "../stores/UserInfoStore";
+
+const userStore = useUserInfoStore();
+
 
 const USER: Ref<UserDTO | null> = ref(null);
 const firstName = ref("");
@@ -15,12 +17,12 @@ const email = ref("");
 
 function patchChanges() {
   const patchedUser : UserDTO = {
-    bio: null,
-    email: null,
-    firstName: null,
-    lastName: null,
-    profileImage: null,
-    uuid: null
+    bio: null!,
+    email: null!,
+    firstName: null!,
+    lastName: null!,
+    profileImage: null!,
+    uuid: null!
   }
   if (email.value != USER!.value!.email!) patchedUser.email = email.value;
   if (firstName.value != USER!.value!.firstName!) patchedUser.firstName = firstName.value;
@@ -29,6 +31,7 @@ function patchChanges() {
 
   userService.patchUser(patchedUser)
       .then((res) => {
+        userInfo.setUser(res.data);
         USER.value = res.data;
         reset();
       })

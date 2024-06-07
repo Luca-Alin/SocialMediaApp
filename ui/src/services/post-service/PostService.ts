@@ -19,6 +19,7 @@ class PostService {
                 image: img
             };
         });
+        console.log(post);
         return axios.post<PostDTO>(`${this.url}/`, {
             content: post.content,
             images: mappedImages

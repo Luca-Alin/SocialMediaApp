@@ -104,6 +104,9 @@ window.addEventListener("keydown", function (e) {
             </a>
             <ul aria-labelledby="navbarDropdown" class="dropdown-menu">
               <li>
+                <router-link class="dropdown-item" :to="`/user/${authenticatedUser.uuid}`">My Profile</router-link>
+              </li>
+              <li>
                 <button class="dropdown-item" @click="logout">Logout</button>
               </li>
               <li>
