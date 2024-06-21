@@ -4,7 +4,7 @@ import {createPinia, storeToRefs} from "pinia";
 import {useUserInfoStore} from "@/stores/UserInfoStore";
 import {useDeveloperStore} from "@/stores/DeveloperStore";
 
-import {createApp, onMounted, type Ref, ref, watch} from "vue";
+import {createApp, nextTick, onMounted, type Ref, ref, watch} from "vue";
 import developerService from "../services/developer-mode-service/DeveloperService";
 import router from "../router";
 
@@ -41,7 +41,32 @@ function enableDeveloperMode() {
 const accessTokenExpTime: Ref<string | null> = ref(null);
 const refreshTokenExpTime: Ref<string | null> = ref(null);
 
+const theme = ref("");
+
+function enableDarkTheme() {
+  const body = document.getElementsByTagName('body')[0];
+  console.log(theme.value);
+  if (theme.value === "dark") {
+    theme.value = "light";
+    body.removeAttribute("data-bs-theme");
+  }
+  else {
+    theme.value = "dark";
+    body.setAttribute("data-bs-theme", "dark");
+  }
+}
+
 onMounted(() => {
+  nextTick(() => {
+    const body = document.getElementsByTagName("body")[0];
+    console.log(body);
+    if (body.getAttributeNames().indexOf("data-bs-theme") != -1) {
+      theme.value = "dark";
+    } else {
+      theme.value = "light";
+    }
+  })
+
   if (developerMode.value) {
     setInterval(() => {
       accessTokenExpTime.value = `${developerService.getTokenExpirationTime(accessToken.value)}s`;
@@ -123,6 +148,17 @@ window.addEventListener("keydown", function (e) {
               </span>
               <span v-else>
                 Enable developer mode
+              </span>
+            </button>
+          </li>
+
+          <li class="nav-item">
+            <button aria-current="page" class="nav-link active" @click="enableDarkTheme()">
+              <span v-if="theme === 'light'">
+                Enable dark mode
+              </span>
+              <span v-else>
+                Enable light mode
               </span>
             </button>
           </li>
