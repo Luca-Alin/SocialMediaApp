@@ -1,0 +1,20 @@
+1. Polling search bar component - it queries the backend 
+if 500ms have passed since the last character was typed
+
+2. Bootstrap to TailWind + Flowbite conversion
+
+3. Markdown for posts
+
+4. Functional dark / white themes
+
+5. Less page movement when components are rendered
+
+6. A pop up when hovering above the name of a user
+
+7. More details about a user when hovering above his name
+
+8. Maybe a modal that opens up when you click a post, and loads all the images
+
+9. Notifications
+
+10. Groups
